@@ -1,0 +1,73 @@
+@import '../../bootstrap/dist/css/bootstrap.min.css';
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+body {
+  font-family: "Montserrat", sans-serif;
+  background: #E5E5E5;
+}
+
+.btn {
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.btn-warning {
+  color: #FFFFFF;
+}
+
+.btn-success:hover {
+  color: #000;
+}
+
+.navbar {
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px #E8EEFB;
+  color: #2965A6;
+}
+.navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0;
+}
+.navbar .title-navbar {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.navbar a {
+  text-decoration: none;
+  color: #2965A6;
+  font-weight: 500 !important;
+}
+.navbar a:hover {
+  text-decoration: none;
+  color: #2965A6;
+  cursor: pointer;
+}
+.navbar .dropdown-menu {
+  margin-top: 23px;
+}
+
+.content {
+  margin-top: 20px;
+  padding: 0;
+}
+.content .card {
+  font-weight: 500;
+  background-color: #FF6E6E;
+  color: #f8f9fa;
+  border-radius: 10px;
+}
+.content .card:hover {
+  font-weight: 500;
+  background-color: #FFFFFF;
+  color: #000;
+}
+.content .card-header {
+  font-weight: 700;
+}
+
+.add-data .form-control {
+  border-radius: 10px;
+}
+.add-data label {
+  font-weight: 500;
+}/*# sourceMappingURL=style.css.map */
