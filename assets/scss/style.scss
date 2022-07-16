@@ -17,6 +17,10 @@ body {
   color: #000;
 }
 
+.form-control {
+  border-radius: 10px;
+}
+
 .navbar {
   background: #FFFFFF;
   box-shadow: 0px 4px 4px #E8EEFB;
@@ -65,9 +69,6 @@ body {
 }
 
 .add-data {
-  .form-control {
-    border-radius: 10px;
-  }
   label {
     font-weight: 500;
   }

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tambah Data</title>
-  <link rel="stylesheet" href="./assets/scss/style.css">
+  <link rel="stylesheet" href="../assets/scss/style.css">
 </head>
 <body>
   <!-- Navbar -->
@@ -17,7 +17,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <img 
-          src="./assets/icon/avatar.svg" 
+          src="../assets/icon/avatar.svg" 
           class="rounded-circle p-1"
         >
         <div class="dropdown p-1">
@@ -118,7 +118,7 @@
       </div>
     </div>
   </div>
-  <script type="" src="./@popperjs/core/dist/umd/popper.min.js"></script>
-  <script type="" src="./bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
+  <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

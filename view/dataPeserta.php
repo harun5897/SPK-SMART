@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <link rel="stylesheet" href="./assets/scss/style.css">
+  <link rel="stylesheet" href="../assets/scss/style.css">
 </head>
 <body>
   <!-- Navbar -->
@@ -17,7 +17,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <img 
-          src="./assets/icon/avatar.svg" 
+          src="../assets/icon/avatar.svg" 
           class="rounded-circle p-1"
         >
         <div class="dropdown p-1">
@@ -77,7 +77,7 @@
         <div class="col-lg-9 px-3">
           <div class="d-flex justify-content-between">
             <div class="button">
-              <a href="/smart/tambahDataPeserta.php" class="btn btn-md btn-success"> Tambah Data</a>
+              <a href="/SPK-SMART/view/tambahDataPeserta.php" class="btn btn-md btn-success"> Tambah Data</a>
             </div>
             <div class="form">
               <input type="text" class="form-control" placeholder="Cari">
@@ -137,7 +137,7 @@
       </div>
     </div>
   </div>
-  <script type="" src="./@popperjs/core/dist/umd/popper.min.js"></script>
-  <script type="" src="./bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
+  <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
