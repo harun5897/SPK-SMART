@@ -18,6 +18,20 @@ body {
   color: #000;
 }
 
+.btn-primary:hover {
+  color: #000;
+}
+
+.btn-secondary {
+  background-color: #FF6E6E;
+  border: #FF6E6E;
+}
+
+.btn-secondary:hover {
+  color: #000;
+  background-color: #FF6E6E;
+}
+
 .form-control {
   border-radius: 10px;
 }
@@ -70,5 +84,15 @@ body {
 }
 
 .add-data label {
+  font-weight: 500;
+}
+
+.login .card-header {
+  color: #2965A6;
+  font-size: 22px;
+  font-weight: 700;
+}
+.login .card-header p {
+  font-size: 14px;
   font-weight: 500;
 }/*# sourceMappingURL=style.css.map */

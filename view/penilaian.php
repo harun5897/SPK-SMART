@@ -13,11 +13,29 @@ if(isset($_GET['alertBerhasilSimpan'])) {
     <script>var alertBerhasilSimpan = true;</script>
   <?php
 }
+if(isset($_GET['alertBerhasilUpdate'])) {
+  ?>
+    <script>var alertBerhasilUpdate = true;</script>
+  <?php
+}
+if(isset($_GET['alertBerhasilHapus'])) {
+  ?>
+    <script>var alertBerhasilHapus = true;</script>
+  <?php
+}
 
-if(isset($_POST['simpanKriteria'])) {
-  simpanKriteria($koneksi, $_POST['namaKriteria'],$_POST['bobotKriteria']);
+if(isset($_POST['simpanPenilaian'])) {
+  simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['kriteriaKomputer'], $_POST['kriteriaPendidikan'], $_POST['kriteriaPengalaman'], $_POST['kriteriaKendaraan']);
+}
+
+if(isset($_GET['dataPenilaian'])) {
+  if($_GET['dataPenilaian'] == 'hapus') {
+    $idPenilaian = $_GET['idPenilaian'];
+    hapusPenilaian($koneksi, $idPenilaian);
+  }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +79,7 @@ if(isset($_POST['simpanKriteria'])) {
   <!-- Content -->
   <div class="content container-md card">
     <div class="card-header">
-      Data Kriteria
+      Data Penilaian
     </div>
     <div class="card-body">
       <div class="row">
@@ -103,7 +121,7 @@ if(isset($_POST['simpanKriteria'])) {
                 class="btn btn-md btn-success" 
                 data-bs-toggle="modal" 
                 data-bs-target="#exampleModal"
-              > Nilai Kriteria </a>
+              > Penilaian </a>
             </div>
             <div class="form">
               <input id="search" type="text" class="form-control" placeholder="Cari">
@@ -113,19 +131,30 @@ if(isset($_POST['simpanKriteria'])) {
           <table id="myTable" class="table table-hover">
             <tr>
               <th>No</th>
-              <th>Nama Kriteria</th>
-              <th>Bobot</th>
+              <th>Nama</th>
+              <th>C1</th>
+              <th>C2</th>
+              <th>C3</th>
+              <th>C4</th>
+              <th>Aksi</th>
             </tr>
             <?php
               $no = 0;
-              $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
-              while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
+              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+                $idPeserta = $arrDataPenilaian['idPeserta'];
+                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
+                $arrDataPeserta = mysqli_fetch_array($dataPeserta);
                 $no++;
             ?>
             <tr>
               <td><?php echo $no; ?></td>
-              <td><?=$arrDataKriteria['namaKriteria']?></td>
-              <td><?=$arrDataKriteria['bobotKriteria']?></td>
+              <td><?=$arrDataPeserta['namaDepan']?></td>
+              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
+              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
+              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
+              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <td><a href="penilaian.php?dataPenilaian=hapus&idPenilaian=<?=$arrDataPenilaian['idPenilaian']?>" class="btn btn-sm btn-danger">hapus</a></td>
             </tr>
             <?php
               endwhile;
@@ -158,34 +187,57 @@ if(isset($_POST['simpanKriteria'])) {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Masukan Nilai Kriteria</h5>
+          <h5 class="modal-title">Penilaian</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="" method="POST">
           <div class="modal-body">
-            <select 
+          <select 
               class="form-select mt-3 form-control" 
               aria-label="Default select example"
-              name="namaKriteria"
+              name="idPeserta"
             >
-              <option value="0"selected>Pilih Data Kriteria</option>
-              <option value="1">Komputer</option>
-              <option value="2">Pendidikan</option>
-              <option value="3">Pengalaman</option>
-              <option value="4">Kendaraan</option>
+              <option value="" selected> Pilih Nama Peserta</option>
+              <?php 
+                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+                while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+              ?>
+              <option value="<?=$arrDataPeserta['idPeserta']?>"><?=$arrDataPeserta['namaDepan']?></option>
+              <?php
+                endwhile;
+              ?>
             </select>
+            <label for="" class="mt-4">Masukan Masing-Masing Nilai Kriteria</label>
             <input 
               type="text" 
               class="form-control mt-3" 
-              placeholder="Masukan Nilai"
-              name="bobotKriteria"
+              placeholder="(C1) Komputer"
+              name="kriteriaKomputer"
+            >
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="(C2) Pendidikan"
+              name="kriteriaPendidikan"
+            >
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="(C3) Pengalaman"
+              name="kriteriaPengalaman"
+            >
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="(C4) Kendaraan"
+              name="kriteriaKendaraan"
             >
           </div>
           <div class="modal-footer mt-3">
             <button 
               type="submit" 
               class="btn btn-primary"
-              name="simpanKriteria"
+              name="simpanPenilaian"
             >
               Simpan
             </button>
@@ -213,6 +265,28 @@ if(isset($_POST['simpanKriteria'])) {
       swal({
         title: "Success",
         text: "Data Berhasil di Simpan",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertBerhasilUpdate) {
+      swal({
+        title: "Success",
+        text: "Data Berhasil di Update",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertBerhasilHapus) {
+      swal({
+        title: "Success",
+        text: "Data Berhasil di Hapus",
         buttons: false,
         icon: "success",
         timer: 2000,

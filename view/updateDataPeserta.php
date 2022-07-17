@@ -4,14 +4,21 @@ include_once('../handlingData/module.php');
 include_once('../handlingData/koneksi.php');
 
 if(isset($_GET['alertDataKosong'])) {
+  $idPeserta = $_GET['idPeserta'];
   ?>
     <script>var alertDataKosong = true;</script>
   <?php
 }
-if(isset($_POST['simpanPeserta'])) {
-  simpanPeserta($koneksi, $_POST['namaDepan'],$_POST['namaBelakang'],$_POST['nik'],$_POST['tanggalLahir'],$_POST['jenisKelamin'],$_POST['agama'],$_POST['alamat'],$_POST['email'],$_POST['kontak']);
+if(isset($_POST['updatePeserta'])) {
+  updatePeserta($koneksi, $_POST['namaDepan'],$_POST['namaBelakang'],$_POST['nik'],$_POST['tanggalLahir'],$_POST['jenisKelamin'],$_POST['agama'],$_POST['alamat'],$_POST['email'],$_POST['kontak'], $_GET['idPeserta']);
 }
-
+if(isset($_GET['dataPeserta'])){
+  if($_GET['dataPeserta'] == 'update') {
+    $idPeserta = $_GET['idPeserta'];
+  }
+}
+$dataPesertaById = mysqli_query($koneksi, "SELECT * FROM `tabelpeserta` WHERE `idPeserta` = $idPeserta");
+$arrDataPesertaById = mysqli_fetch_array($dataPesertaById);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,7 +73,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Nama Depan</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="Nama Depan" name="namaDepan">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Nama Depan" 
+                  name="namaDepan" 
+                  value="<?=$arrDataPesertaById['namaDepan']?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -74,7 +87,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Nama Belakang</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="Nama Belakang" name="namaBelakang">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Nama Belakang" 
+                  name="namaBelakang" 
+                  value="<?=$arrDataPesertaById['namaBelakang']?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -82,7 +101,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">NIK</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="NIK" name="nik">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="NIK" 
+                  name="nik"
+                  value="<?=$arrDataPesertaById['nik']?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -90,7 +115,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Tanggal Lahir</label>
               </div>
               <div class="col-7 px-0">
-                <input type="date" class="form-control" placeholder="" name="tanggalLahir">
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  placeholder="" 
+                  name="tanggalLahir"
+                  value="<?php echo date('Y-m-d',strtotime($arrDataPesertaById["tanggalLahir"]))?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -103,9 +134,18 @@ if(isset($_POST['simpanPeserta'])) {
                   aria-label="Default select example"
                   name="jenisKelamin"
                 >
-                  <option selected>Plih Jenis Kelamin</option>
-                  <option value="laki-laki">laki-laki</option>
-                  <option value="perempuan">perempuan</option>
+                  <option 
+                    value="laki-laki" 
+                    <?=$arrDataPesertaById['jenisKelamin'] == 'laki-laki' ? ' selected="selected"' : ''?>
+                  > 
+                    laki-laki
+                  </option>
+                  <option 
+                    value="perempuan"
+                    <?=$arrDataPesertaById['jenisKelamin'] == 'perempuan' ? ' selected="selected"' : ''?>
+                  >
+                    perempuan
+                </option>
                 </select>
               </div>
             </div>
@@ -114,7 +154,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Agama</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="Agama" name="agama">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Agama" 
+                  name="agama"
+                  value="<?=$arrDataPesertaById['agama']?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -122,7 +168,11 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Alamat</label>
               </div>
               <div class="col-7 px-0">
-                <textarea type="text" class="form-control" placeholder="Agama" name="alamat"> </textarea>
+                <textarea 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Agama" 
+                  name="alamat"><?=$arrDataPesertaById['alamat']?></textarea>
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -130,7 +180,13 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Email</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="Email" name="email">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Email" 
+                  name="email"
+                  value="<?=$arrDataPesertaById['email']?>"
+                >
               </div>
             </div>
             <div class="d-flex justify-content-start row mt-3">
@@ -138,9 +194,15 @@ if(isset($_POST['simpanPeserta'])) {
                 <label for="">Kontak</label>
               </div>
               <div class="col-7 px-0">
-                <input type="text" class="form-control" placeholder="Kontak" name="kontak">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Kontak" 
+                  name="kontak"
+                  value="<?=$arrDataPesertaById['kontak']?>"
+                >
                 <div class="d-flex justify-content-end mb-2"> 
-                  <button type="submit" class="btn btn-warning mt-3" name="simpanPeserta"> Simpan</button>
+                  <button type="submit" class="btn btn-warning mt-3" name="updatePeserta"> Simpan</button>
                 </div>
               </div>
             </div>
