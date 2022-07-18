@@ -3,6 +3,22 @@
   include_once('../handlingData/module.php');
   include_once('../handlingData/koneksi.php');
 
+  if(isset($_GET['alertLogout'])) {
+    ?>
+      <script>var alertLogout = true;</script>
+    <?php
+  }
+  if(isset($_GET['alertGagalLogin'])) {
+    ?>
+      <script>var alertGagalLogin = true;</script>
+    <?php
+  }
+  if(isset($_GET['alertBelumLogin'])) {
+    ?>
+      <script>var alertBelumLogin = true;</script>
+    <?php
+  }
+
   if(isset($_POST['login'])) {
     login($koneksi, $_POST['email'], $_POST['kataSandi']);
   }
@@ -36,5 +52,38 @@
         </div>
       </form>
   </div>
+
+  <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
+  <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+    if(alertLogout) {
+      swal({
+        title: "Success",
+        text: "Berhasil Keluar",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertGagalLogin) {
+      swal({
+        title: "Maaf",
+        text: "Password dan Email Salah!",
+        buttons: 'OK',
+      });
+    }
+  </script>
+  <script>
+    if(alertBelumLogin) {
+      swal({
+        title: "Maaf",
+        text: "Silahkan Login Terlebih Dahulu!",
+        buttons: 'OK',
+      });
+    }
+  </script>
 </body>
 </html>

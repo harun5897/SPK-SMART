@@ -3,6 +3,10 @@ session_start();
 include_once('../handlingData/module.php');
 include_once('../handlingData/koneksi.php');
 
+if($_SESSION['loginStatus'] != 1) {
+  header('location: index.php?alertBelumLogin=true');
+}
+
 if(isset($_GET['alertDataKosong'])) {
   ?>
     <script>var alertDataKosong = true;</script>
@@ -12,6 +16,9 @@ if(isset($_POST['simpanPeserta'])) {
   simpanPeserta($koneksi, $_POST['namaDepan'],$_POST['namaBelakang'],$_POST['nik'],$_POST['tanggalLahir'],$_POST['jenisKelamin'],$_POST['agama'],$_POST['alamat'],$_POST['email'],$_POST['kontak']);
 }
 
+if(isset($_POST['gantiKataSandi'])){
+  gantiKataSandi($koneksi, $_POST['kataSandiLama'], $_POST['kataSandiBaru'], $_SESSION['idUser']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,16 +48,44 @@ if(isset($_POST['simpanPeserta'])) {
             data-bs-display="static" 
             aria-expanded="false"
           >
-            Harun
+            <?php echo $_SESSION['namaUser']; ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" href="#">Keluar</a>
-            <a class="dropdown-item" href="#">Ganti Kata Sandi</a>
+            <a class="dropdown-item" href="logout.php">Keluar</a>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalGantiKataSandi">Ganti Kata Sandi</a>
           </ul>
         </div>
       </div>
     </div>
   </nav>
+  <!-- NAVBAR MODAL GANTI KATA SANDI -->
+  <div 
+    class="modal fade" 
+    id="modalGantiKataSandi" 
+    tabindex="-1" 
+    aria-labelledby="exampleModalLabel" 
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ganti Kata Sandi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+          <div class="modal-body">
+            <label for="">Kata Sandi Lama</label>
+            <input type="password" class="form-control" name="kataSandiLama">
+            <label for="" class="mt-2">Kata Sandi Baru</label>
+            <input type="password" class="form-control" name="kataSandiBaru">
+            <div class="my-3 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary" name="gantiKataSandi">Simpan</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Content -->
   <div class="content container-md card">

@@ -1,15 +1,43 @@
 <?php
 function login($koneksi, $email, $kataSandi) {
-  $dataUser = mysqli_query($koneksi, " SELECT * FROM `tabeluser` WHERE `email` = '$email' AND `kataSandi` = '$kataSandi'");
-  $arrDataUser = mysqli_fetch_array($dataUser);
-  if ($arrDataUser['email'] == $email && $arrDataUser['kataSandi'] == $kataSandi) {
-    echo 'berhasil';
+  if(!$email || !$kataSandi) {
+    header('location: index.php?alertGagalLogin=true');
   }
   else {
-    echo 'gagal';
+    $dataUser = mysqli_query($koneksi, " SELECT * FROM `tabeluser` WHERE `email` = '$email' AND `kataSandi` = '$kataSandi'");
+    $arrDataUser = mysqli_fetch_array($dataUser);
+    if ($arrDataUser['email'] == $email && $arrDataUser['kataSandi'] == $kataSandi) {
+      $_SESSION['idUser'] = $arrDataUser['idUser'];
+      $_SESSION['namaUser'] = $arrDataUser['namaUser'];
+      $_SESSION['role'] = $arrDataUser['role'];
+      $_SESSION['loginStatus'] = true;
+      header('location: dataPeserta.php?alertBerhasilLogin=true');
+    }
+    else {
+      header('location: index.php?alertGagalLogin=true');
+    }
   }
-
 }
+
+function gantiKataSandi ($koneksi, $kataSandiLama, $kataSandiBaru, $idUser) {
+  if(!$kataSandiLama || !$kataSandiBaru) {
+    header('location: index.php?alertGagalGantiKataSandi=true');
+  }
+  else {
+    if($kataSandiLama == $kataSandiBaru) {
+      session_start();
+      session_destroy();
+      header('location: index.php?alertGagalGantiKataSandi=true');
+    }
+    else {
+      mysqli_query($koneksi, "UPDATE `tabeluser` SET `kataSandi` = '$kataSandiBaru' WHERE `idUser` = '$idUser'");
+      session_start();
+      session_destroy();
+      header('location: index.php?alertBerhasilGantiKataSandi=true');
+    }
+  }
+}
+
 function simpanKriteria($koneksi, $namaKriteria, $bobotKriteria) {
   if(!$bobotKriteria || $namaKriteria == 0) {
     header('location: dataKriteria.php?alertDataKosong=true');
