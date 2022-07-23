@@ -27,6 +27,11 @@ if(isset($_GET['alertBerhasilHapus'])) {
     <script>var alertBerhasilHapus = true;</script>
   <?php
 }
+if(isset($_GET['alertTotalKriteriaMax'])) {
+  ?>
+    <script>var alertTotalKriteriaMax = true;</script>
+  <?php
+}
 
 if(isset($_POST['simpanPenilaian'])) {
   simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['kriteriaKomputer'], $_POST['kriteriaPendidikan'], $_POST['kriteriaPengalaman'], $_POST['kriteriaKendaraan']);
@@ -77,6 +82,9 @@ if(isset($_POST['gantiKataSandi'])){
           <ul class="dropdown-menu dropdown-menu-end">
             <a class="dropdown-item" href="logout.php">Keluar</a>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalGantiKataSandi">Ganti Kata Sandi</a>
+            <?php if($_SESSION['role'] == 'superAdmin') { ?>
+            <a class="dropdown-item" href="daftarUser.php">Daftar User</a>
+            <?php } ?>
           </ul>
         </div>
       </div>
@@ -140,7 +148,7 @@ if(isset($_POST['gantiKataSandi'])){
               </div>
             </div>
           </a>
-          <a href="#" style="text-decoration: none;">
+          <a href="perangkingan.php" style="text-decoration: none;">
             <div class="card mt-2">
               <div class="card-body">
                 Perangkingan
@@ -325,6 +333,15 @@ if(isset($_POST['gantiKataSandi'])){
         buttons: false,
         icon: "success",
         timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertTotalKriteriaMax) {
+      swal({
+        title: "Maaf",
+        text: "Nilai Kriteria Melebihi Batas",
+        buttons: 'OK',
       });
     }
   </script>

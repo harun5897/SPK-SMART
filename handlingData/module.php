@@ -38,6 +38,34 @@ function gantiKataSandi ($koneksi, $kataSandiLama, $kataSandiBaru, $idUser) {
   }
 }
 
+function simpanUser($koneksi, $namaUser, $email, $role) {
+  $kataSandiDefault = '12345';
+  if(!$namaUser || !$email || $role == '0') {
+    header('location: daftarUser.php?alertDataKosong=true');
+  }
+  else {
+    mysqli_query($koneksi, "INSERT INTO tabeluser (`namaUser`, `email`, `kataSandi`, `role`) VALUES ('$namaUser', '$email', '$kataSandiDefault', '$role')");
+    header('location: daftarUser.php?alertBerhasilHapus=true');
+  }
+}
+
+function hapusUser($koneksi, $idUser){
+  mysqli_query($koneksi, "DELETE FROM `tabeluser` WHERE `idUser` = '$idUser'");
+  header('location: daftarUser.php?alertBerhasilSimpan=true');
+}
+
+function updateUser($koneksi, $idUser, $namaUser, $email, $role) {
+  if(!$namaUser || !$email || $role == '0') {
+    header('location: daftarUser.php?alertDataKosong=true');
+  }
+  else {
+    mysqli_query($koneksi, "UPDATE `tabeluser` SET `namaUser` = '$namaUser', `email` = '$email', `role` = '$role'
+      WHERE `idUser` = '$idUser'
+    ");
+    header('location: daftarUser.php?alertDataBerhasilUpdate=true');
+  }
+}
+
 function simpanKriteria($koneksi, $namaKriteria, $bobotKriteria) {
   if(!$bobotKriteria || $namaKriteria == 0) {
     header('location: dataKriteria.php?alertDataKosong=true');
@@ -81,23 +109,31 @@ function hapusPeserta($koneksi, $idPeserta) {
 }
 
 function simpanPenilaian($koneksi, $idPeserta, $kriteriaKomputer, $kriteriaPendidikan, $kriteriaPengalaman, $kriteriaKendaraan) {
-  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
 
-  if($idPeserta == '' || !$kriteriaKomputer || !$kriteriaPendidikan || !$kriteriaPengalaman || !$kriteriaKendaraan) {
-    header('location: penilaian.php?alertDataKosong=true');
+  $totalNilaiKriteria = (int)$kriteriaKomputer + (int)$kriteriaPendidikan + (int)$kriteriaPengalaman + (int)$kriteriaKendaraan;
+  if($totalNilaiKriteria > 100){
+    header('location: penilaian.php?alertTotalKriteriaMax=true');
   }
   else {
-    if($arrDataPenilaian['idPeserta'] == $idPeserta) {
-      mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `idPeserta` = '$idPeserta', `kriteriaKomputer` = '$kriteriaKomputer', `kriteriaPendidikan` = '$kriteriaPendidikan', `kriteriaPengalaman` = '$kriteriaPengalaman', `kriteraKendaraan` = '$kriteriaKendaraan'
-      WHERE `idPeserta` = '$idPeserta'");
-      header('location: penilaian.php?alertBerhasilUpdate=true');
+    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+    $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
+
+    if($idPeserta == '' || !$kriteriaKomputer || !$kriteriaPendidikan || !$kriteriaPengalaman || !$kriteriaKendaraan) {
+      header('location: penilaian.php?alertDataKosong=true');
     }
     else {
-      mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES ('$idPeserta', '$kriteriaKomputer', '$kriteriaPendidikan', '$kriteriaPengalaman', '$kriteriaKendaraan')");
-      header('location: penilaian.php?alertBerhasilSimpan=true');
+      if($arrDataPenilaian['idPeserta'] == $idPeserta) {
+        mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `idPeserta` = '$idPeserta', `kriteriaKomputer` = '$kriteriaKomputer', `kriteriaPendidikan` = '$kriteriaPendidikan', `kriteriaPengalaman` = '$kriteriaPengalaman', `kriteraKendaraan` = '$kriteriaKendaraan'
+        WHERE `idPeserta` = '$idPeserta'");
+        header('location: penilaian.php?alertBerhasilUpdate=true');
+      }
+      else {
+        mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES ('$idPeserta', '$kriteriaKomputer', '$kriteriaPendidikan', '$kriteriaPengalaman', '$kriteriaKendaraan')");
+        header('location: penilaian.php?alertBerhasilSimpan=true');
+      }
     }
   }
+  
 }
 
 function hapusPenilaian($koneksi, $idPenilaian) {

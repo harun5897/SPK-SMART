@@ -3,37 +3,8 @@ session_start();
 include_once('../handlingData/module.php');
 include_once('../handlingData/koneksi.php');
 
-if($_SESSION['loginStatus'] != 1) {
-  header('location: index.php?alertBelumLogin=true');
-}
-
-if(isset($_GET['alertBerhasilLogin'])) {
-  ?>
-    <script>var alertBerhasilLogin = true;</script>
-  <?php
-}
-if(isset($_GET['alertBerhasilSimpan'])) {
-  ?>
-    <script>var alertBerhasilSimpan = true;</script>
-  <?php
-}
-if(isset($_GET['alertBerhasilHapus'])) {
-  ?>
-    <script>var alertBerhasilHapus = true;</script>
-  <?php
-}
-
-if(isset($_GET['dataPeserta'])){
-  if($_GET['dataPeserta'] == 'hapus') {
-    $idPeserta = $_GET['idPeserta'];
-    hapusPeserta($koneksi, $idPeserta);
-  }
-}
-
-if(isset($_POST['gantiKataSandi'])){
-  gantiKataSandi($koneksi, $_POST['kataSandiLama'], $_POST['kataSandiBaru'], $_SESSION['idUser']);
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,7 +78,7 @@ if(isset($_POST['gantiKataSandi'])){
   <!-- Content -->
   <div class="content container-md card">
     <div class="card-header">
-      Data Peserta
+      Perangkingan
     </div>
     <div class="card-body">
       <div class="row">
@@ -144,40 +115,27 @@ if(isset($_POST['gantiKataSandi'])){
         <div class="col-lg-9 px-3">
           <div class="d-flex justify-content-between">
             <div class="button">
-              <a href="/SPK-SMART/view/tambahDataPeserta.php" class="btn btn-md btn-success"> Tambah Data</a>
+              <a 
+                href="" 
+                class="btn btn-md btn-success" 
+              > Hitung </a>
             </div>
             <div class="form">
-              <input type="text" class="form-control" placeholder="Cari">
+              <input id="search" type="text" class="form-control" placeholder="Cari">
             </div>
           </div>
           <hr>
-          <table class="table table-hover">
+          <table id="myTable" class="table table-hover">
             <tr>
               <th>No</th>
-              <th>Nama</th>
-              <th>Jenis Kelamin</th>
-              <th>Kontak</th>
-              <th>Aksi</th>
+              <th>1</th>
+              <th>2</th>
+							<th>2</th>
+              <th>4</th>
             </tr>
-            <?php
-              $no = 0;
-              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
-              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
-                $no++;
-            ?>
             <tr>
-              <td><?php echo $no; ?></td>
-              <td><?=$arrDataPeserta['namaDepan']?></td>
-              <td><?=$arrDataPeserta['jenisKelamin']?></td>
-              <td><?=$arrDataPeserta['kontak']?></td>
-              <th>
-                <a href="updateDataPeserta.php?dataPeserta=update&idPeserta=<?=$arrDataPeserta['idPeserta']?>" class="btn btn-sm btn-warning">Detail</a>
-                <a href="dataPeserta.php?dataPeserta=hapus&idPeserta=<?=$arrDataPeserta['idPeserta']?>" class="btn btn-sm btn-danger">Hapus</a>
-              </th>
+            
             </tr>
-            <?php
-              endwhile;
-            ?>
           </table>
           <div class="d-flex justify-content-between">
             <div>
@@ -195,42 +153,10 @@ if(isset($_POST['gantiKataSandi'])){
       </div>
     </div>
   </div>
+
   <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
   <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-  <script>
-    if(alertBerhasilLogin) {
-      swal({
-        title: "Success",
-        text: "Berhasil Masuk",
-        buttons: false,
-        icon: "success",
-        timer: 2000,
-      });
-    }
-  </script>
-  <script>
-    if(alertBerhasilSimpan) {
-      swal({
-        title: "Success",
-        text: "Data Berhasil di Simpan",
-        buttons: false,
-        icon: "success",
-        timer: 2000,
-      });
-    }
-  </script>
-  <script>
-    if(alertBerhasilHapus) {
-      swal({
-        title: "Success",
-        text: "Data Berhasil di Hapus",
-        buttons: false,
-        icon: "success",
-        timer: 2000,
-      });
-    }
-  </script>
+	
 </body>
 </html>

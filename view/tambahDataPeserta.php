@@ -53,6 +53,9 @@ if(isset($_POST['gantiKataSandi'])){
           <ul class="dropdown-menu dropdown-menu-end">
             <a class="dropdown-item" href="logout.php">Keluar</a>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalGantiKataSandi">Ganti Kata Sandi</a>
+            <?php if($_SESSION['role'] == 'superAdmin') { ?>
+            <a class="dropdown-item" href="daftarUser.php">Daftar User</a>
+            <?php } ?>
           </ul>
         </div>
       </div>
