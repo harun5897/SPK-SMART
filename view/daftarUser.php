@@ -17,14 +17,41 @@ if(isset($_GET['alertBerhasilSimpan'])) {
     <script>var alertBerhasilSimpan = true;</script>
   <?php
 }
-
-if(isset($_POST['simpanKriteria'])) {
-  simpanKriteria($koneksi, $_POST['namaKriteria'],$_POST['bobotKriteria']);
+if(isset($_GET['alertBerhasilHapus'])) {
+  ?>
+    <script>var alertBerhasilHapus = true;</script>
+  <?php
+}
+if(isset($_GET['alertDataBerhasilUpdate'])) {
+  ?>
+    <script>var alertDataBerhasilUpdate = true;</script>
+  <?php
 }
 
-if(isset($_POST['gantiKataSandi'])){
-  gantiKataSandi($koneksi, $_POST['kataSandiLama'], $_POST['kataSandiBaru'], $_SESSION['idUser']);
+if(isset($_POST['simpanUser'])) {
+	simpanUser($koneksi, $_POST['namaUser'], $_POST['email'], $_POST['role']);
 }
+if(isset($_POST['updateUser'])) {
+  $idUser = $_SESSION['idUser'];
+  updateUser($koneksi, $idUser, $_POST['namaUser'], $_POST['email'], $_POST['role']);
+
+}
+
+if(isset($_GET['daftarUser'])) {
+  if($_GET['daftarUser'] == 'hapus') {
+    hapusUser($koneksi, $_GET['idUser']);
+  }
+  if($_GET['daftarUser'] == 'update') {
+    $idUser = $_GET['idUser'];
+    $_SESSION['idUser'] = $idUser;
+    $updateDataUser = mysqli_query($koneksi, "SELECT * FROM tabeluser WHERE `idUser` = '$idUser'");
+    $arrUpdateDataUser = mysqli_fetch_array($updateDataUser);
+    ?> 
+      <script>var updateDataUser = true;</script>
+    <?php
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -100,7 +127,7 @@ if(isset($_POST['gantiKataSandi'])){
   <!-- Content -->
   <div class="content container-md card">
     <div class="card-header">
-      Data Kriteria
+      Daftar User
     </div>
     <div class="card-body">
       <div class="row">
@@ -142,7 +169,7 @@ if(isset($_POST['gantiKataSandi'])){
                 class="btn btn-md btn-success" 
                 data-bs-toggle="modal" 
                 data-bs-target="#exampleModal"
-              > Nilai Kriteria </a>
+              > Tambah User </a>
             </div>
             <div class="form">
               <input id="search" type="text" class="form-control" placeholder="Cari">
@@ -152,19 +179,26 @@ if(isset($_POST['gantiKataSandi'])){
           <table id="myTable" class="table table-hover">
             <tr>
               <th>No</th>
-              <th>Nama Kriteria</th>
-              <th>Bobot</th>
+              <th>Nama User</th>
+              <th>Email</th>
+							<th>Role</th>
+              <th>Aksi</th>
             </tr>
             <?php
               $no = 0;
-              $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
-              while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+              $dataUser = mysqli_query($koneksi, "SELECT * FROM tabeluser");
+              while($arrDataUser = mysqli_fetch_array($dataUser)) :
                 $no++;
             ?>
             <tr>
               <td><?php echo $no; ?></td>
-              <td><?=$arrDataKriteria['namaKriteria']?></td>
-              <td><?=$arrDataKriteria['bobotKriteria']?></td>
+              <td><?=$arrDataUser['namaUser']?></td>
+              <td><?=$arrDataUser['email']?></td>
+							<td><?=$arrDataUser['role']?></td>
+              <td>
+                <a href="daftarUser.php?daftarUser=update&idUser=<?=$arrDataUser['idUser']?>" class="btn btn-sm btn-warning">Edit</a>
+                <a href="daftarUser.php?daftarUser=hapus&idUser=<?=$arrDataUser['idUser']?>" class="btn btn-sm btn-danger">Hapus</a>
+              </td>
             </tr>
             <?php
               endwhile;
@@ -187,7 +221,7 @@ if(isset($_POST['gantiKataSandi'])){
     </div>
   </div>
 
-  <!-- Modal Tambah Data Kriteria-->
+  <!-- Modal Tambah Data User-->
   <div class="modal fade" 
     tabindex="-1"
     id="exampleModal"
@@ -197,34 +231,41 @@ if(isset($_POST['gantiKataSandi'])){
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Masukan Nilai Kriteria</h5>
+          <h5 class="modal-title">Tambah Data User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="" method="POST">
           <div class="modal-body">
-            <select 
-              class="form-select mt-3 form-control" 
-              aria-label="Default select example"
-              name="namaKriteria"
-            >
-              <option value="0"selected>Pilih Data Kriteria</option>
-              <option value="1">Komputer</option>
-              <option value="2">Pendidikan</option>
-              <option value="3">Pengalaman</option>
-              <option value="4">Kendaraan</option>
-            </select>
+						<label for="" class="text-black">Nama User</label>
             <input 
               type="text" 
-              class="form-control mt-3" 
-              placeholder="Masukan Nilai"
-              name="bobotKriteria"
+              class="form-control mt-1" 
+              placeholder="Nama User"
+              name="namaUser"
             >
+						<label for="" class="text-black mt-3">Email</label>
+            <input 
+              type="text" 
+              class="form-control mt-1" 
+              placeholder="Email"
+              name="email"
+            >
+						<label for="" class="text-black mt-3">Role User</label>
+						<select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
+              name="role"
+            >
+              <option value="0"selected>Pilih Role User</option>
+              <option value="admin">Admin</option>
+              <option value="superAdmin">Super Admin</option>
+            </select>
           </div>
           <div class="modal-footer mt-3">
             <button 
               type="submit" 
               class="btn btn-primary"
-              name="simpanKriteria"
+              name="simpanUser"
             >
               Simpan
             </button>
@@ -234,11 +275,78 @@ if(isset($_POST['gantiKataSandi'])){
     </div>
   </div>
 
+  <!-- Modal Update Data User-->
+  <div class="modal fade" 
+    tabindex="-1"
+    id="exampleModalUpdate"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Data User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+          <div class="modal-body">
+						<label for="" class="text-black">Nama User</label>
+            <input 
+              type="text" 
+              class="form-control mt-1" 
+              placeholder="Nama User"
+              name="namaUser"
+              value='<?php echo $arrUpdateDataUser['namaUser']?>'
+            >
+						<label for="" class="text-black mt-3">Email</label>
+            <input 
+              type="text" 
+              class="form-control mt-1" 
+              placeholder="Email"
+              name="email"
+              value='<?php echo $arrUpdateDataUser['email']?>'
+            >
+						<label for="" class="text-black mt-3">Role User</label>
+						<select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
+              name="role"
+            >
+              <option value="0"selected>Pilih Role User</option>
+              <option 
+                value="admin"
+                <?=$arrUpdateDataUser['role'] == 'admin' ? ' selected="selected"' : ''?>
+              >
+                Admin
+              </option>
+              <option 
+                value="superAdmin"
+                <?=$arrUpdateDataUser['role'] == 'superAdmin' ? ' selected="selected"' : ''?>
+              >
+                Super Admin
+              </option>
+            </select>
+          </div>
+          <div class="modal-footer mt-3">
+            <button 
+              type="submit" 
+              class="btn btn-primary"
+              name="updateUser"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
   <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-  <script>
+	
+	<script>
     if(alertDataKosong) {
       swal({
         title: "Sorry",
@@ -256,6 +364,36 @@ if(isset($_POST['gantiKataSandi'])){
         icon: "success",
         timer: 2000,
       });
+    }
+  </script>
+  <script>
+    if(alertBerhasilHapus) {
+      swal({
+        title: "Success",
+        text: "Data Berhasil di Hapus",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertDataBerhasilUpdate) {
+      swal({
+        title: "Success",
+        text: "Data Berhasil di Update",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if (updateDataUser) {
+      var myModal = new bootstrap.Modal(document.getElementById("exampleModalUpdate"), {});
+      document.onreadystatechange = function () {
+        myModal.show();
+      };
     }
   </script>
 </body>

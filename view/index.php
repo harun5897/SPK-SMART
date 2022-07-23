@@ -18,6 +18,16 @@
       <script>var alertBelumLogin = true;</script>
     <?php
   }
+  if(isset($_GET['alertBerhasilGantiKataSandi'])) {
+    ?>
+      <script>var alertBerhasilGantiKataSandi = true;</script>
+    <?php
+  }
+  if(isset($_GET['alertGagalGantiKataSandi'])) {
+    ?>
+      <script>var alertGagalGantiKataSandi = true;</script>
+    <?php
+  }
 
   if(isset($_POST['login'])) {
     login($koneksi, $_POST['email'], $_POST['kataSandi']);
@@ -59,7 +69,7 @@
   <script>
     if(alertLogout) {
       swal({
-        title: "Success",
+        title: "Berhasil",
         text: "Berhasil Keluar",
         buttons: false,
         icon: "success",
@@ -69,6 +79,7 @@
   </script>
   <script>
     if(alertGagalLogin) {
+      console.log('tes')
       swal({
         title: "Maaf",
         text: "Password dan Email Salah!",
@@ -85,5 +96,26 @@
       });
     }
   </script>
+  <script>
+    if(alertBerhasilGantiKataSandi) {
+      swal({
+        title: "Berhasil",
+        text: "Kata Sandi Berhasil di Ubah!",
+        buttons: 'OK',
+        icon: 'success'
+      });
+    }
+  </script>
+  <script>
+    if(alertGagalGantiKataSandi) {
+      swal({
+        title: "Gagal",
+        text: "Cek Kembali kata sandi lama dan kata sandi baru!",
+        buttons: 'OK',
+        icon: 'error'
+      });
+    }
+  </script>
 </body>
 </html>
+
