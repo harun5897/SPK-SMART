@@ -107,7 +107,7 @@ if(isset($_POST['gantiKataSandi'])){
   <!-- Content -->
   <div class="content container-md card">
     <div class="card-header">
-      Data Peserta testing git ari ramadhan
+      Data Peserta testing git ari ramadhan 1234
     </div>
     <div class="card-body">
       <div class="row">
