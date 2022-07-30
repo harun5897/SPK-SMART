@@ -131,12 +131,12 @@ if($_SESSION['loginStatus'] != 1) {
           <h4 class="mt-2 bg-warning py-1 ps-1">Tabel Nilai</h4>
           <table id="myTable" class="table table-hover">
             <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>C1</th>
-              <th>C2</th>
-							<th>C3</th>
-              <th>C4</th>
+              <th class="text-center">No</th>
+              <th class="text-center">Nama</th>
+              <th class="text-center">C1</th>
+              <th class="text-center">C2</th>
+							<th class="text-center">C3</th>
+              <th class="text-center">C4</th>
             </tr>
             <?php
               $no = 0;
@@ -148,12 +148,12 @@ if($_SESSION['loginStatus'] != 1) {
                 $arrDataPeserta = mysqli_fetch_array($dataPeserta);
             ?>
             <tr>
-              <td><?php echo $no; ?></td>
-              <td><?=$arrDataPeserta['namaDepan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <td class="text-center"><?php echo $no; ?></td>
+              <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaKomputer']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteraKendaraan']?></td>
             </tr>
             <?php
               endwhile;
@@ -175,12 +175,12 @@ if($_SESSION['loginStatus'] != 1) {
           <h4 class="mt-4 bg-warning py-1 ps-1">Tabel Utility</h4>
           <table id="myTable" class="table table-hover">
             <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>C1</th>
-              <th>C2</th>
-							<th>C3</th>
-              <th>C4</th>
+              <th class="text-center">No</th>
+              <th class="text-center">Nama</th>
+              <th class="text-center">C1</th>
+              <th class="text-center">C2</th>
+							<th class="text-center">C3</th>
+              <th class="text-center">C4</th>
             </tr>
             <?php
               $no = 0;
@@ -188,15 +188,15 @@ if($_SESSION['loginStatus'] != 1) {
               while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
                 $no++;
                 $idPeserta = $arrDataPenilaian['idPeserta'];
-                $arrDataPeserta = getUtility($koneksi, $idPeserta);
+                $arrDataUtility = getUtility($koneksi, $idPeserta, $arrDataPenilaian['kriteriaKomputer'], $arrDataPenilaian['kriteriaPendidikan'], $arrDataPenilaian['kriteriaPengalaman'], $arrDataPenilaian['kriteraKendaraan']);
             ?>
             <tr>
-              <td><?php echo $no; ?></td>
-              <td><?=$arrDataPeserta['namaDepan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <td class="text-center"><?php echo $no; ?></td>
+              <td class="text-center"><?=$arrDataUtility[1]['namaDepan']?></td>
+              <td class="text-center"><?=$arrDataUtility[0]['utilityKomputer']?></td>
+              <td class="text-center"><?=$arrDataUtility[0]['utilityPendidikan']?></td>
+              <td class="text-center"><?=$arrDataUtility[0]['utilityPengalaman']?></td>
+              <td class="text-center"><?=$arrDataUtility[0]['utilityKendaraan']?></td>
             </tr>
             <?php
               endwhile;
