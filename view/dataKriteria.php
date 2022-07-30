@@ -17,6 +17,11 @@ if(isset($_GET['alertBerhasilSimpan'])) {
     <script>var alertBerhasilSimpan = true;</script>
   <?php
 }
+if(isset($_GET['alertTotalKriteriaMax'])) {
+  ?>
+    <script>var alertTotalKriteriaMax = true;</script>
+  <?php
+}
 
 if(isset($_POST['simpanKriteria'])) {
   simpanKriteria($koneksi, $_POST['namaKriteria'],$_POST['bobotKriteria']);
@@ -255,6 +260,15 @@ if(isset($_POST['gantiKataSandi'])){
         buttons: false,
         icon: "success",
         timer: 2000,
+      });
+    }
+  </script>
+  <script>
+    if(alertTotalKriteriaMax) {
+      swal({
+        title: "Maaf",
+        text: "Nilai Kriteria Melebihi Batas",
+        buttons: 'OK',
       });
     }
   </script>

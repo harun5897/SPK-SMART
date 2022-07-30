@@ -2,7 +2,9 @@
 session_start();
 include_once('../handlingData/module.php');
 include_once('../handlingData/koneksi.php');
-
+if($_SESSION['loginStatus'] != 1) {
+  header('location: index.php?alertBelumLogin=true');
+}
 ?>
 
 <!DOCTYPE html>
@@ -116,7 +118,7 @@ include_once('../handlingData/koneksi.php');
           <div class="d-flex justify-content-between">
             <div class="button">
               <a 
-                href="" 
+                href="langkahPerangkingan.php" 
                 class="btn btn-md btn-success" 
               > Hitung </a>
             </div>
@@ -128,14 +130,32 @@ include_once('../handlingData/koneksi.php');
           <table id="myTable" class="table table-hover">
             <tr>
               <th>No</th>
-              <th>1</th>
-              <th>2</th>
-							<th>2</th>
-              <th>4</th>
+              <th>Nama</th>
+              <th>C1</th>
+              <th>C2</th>
+							<th>C3</th>
+              <th>C4</th>
             </tr>
+            <?php
+              $no = 0;
+              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
+              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+                $no++;
+                $idPeserta = $arrDataPenilaian['idPeserta'];
+                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
+                $arrDataPeserta = mysqli_fetch_array($dataPeserta);
+            ?>
             <tr>
-            
+              <td><?php echo $no; ?></td>
+              <td><?=$arrDataPeserta['namaDepan']?></td>
+              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
+              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
+              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
+              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
             </tr>
+            <?php
+              endwhile;
+            ?>
           </table>
           <div class="d-flex justify-content-between">
             <div>

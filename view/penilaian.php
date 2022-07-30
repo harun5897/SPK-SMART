@@ -27,11 +27,6 @@ if(isset($_GET['alertBerhasilHapus'])) {
     <script>var alertBerhasilHapus = true;</script>
   <?php
 }
-if(isset($_GET['alertTotalKriteriaMax'])) {
-  ?>
-    <script>var alertTotalKriteriaMax = true;</script>
-  <?php
-}
 
 if(isset($_POST['simpanPenilaian'])) {
   simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['kriteriaKomputer'], $_POST['kriteriaPendidikan'], $_POST['kriteriaPengalaman'], $_POST['kriteriaKendaraan']);
@@ -173,13 +168,13 @@ if(isset($_POST['gantiKataSandi'])){
           <hr>
           <table id="myTable" class="table table-hover">
             <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>C1</th>
-              <th>C2</th>
-              <th>C3</th>
-              <th>C4</th>
-              <th>Aksi</th>
+              <th class="text-center">No</th>
+              <th class="text-center">Nama</th>
+              <th class="text-center">Komputer</th>
+              <th class="text-center">Pendidikan</th>
+              <th class="text-center">Pengalaman</th>
+              <th class="text-center">Kendaraan</th>
+              <th class="text-center">Aksi</th>
             </tr>
             <?php
               $no = 0;
@@ -191,13 +186,13 @@ if(isset($_POST['gantiKataSandi'])){
                 $no++;
             ?>
             <tr>
-              <td><?php echo $no; ?></td>
-              <td><?=$arrDataPeserta['namaDepan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
-              <td><a href="penilaian.php?dataPenilaian=hapus&idPenilaian=<?=$arrDataPenilaian['idPenilaian']?>" class="btn btn-sm btn-danger">hapus</a></td>
+              <td class="text-center"><?php echo $no; ?></td>
+              <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaKomputer']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
+              <td class="text-center"><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <td class="text-center"><a href="penilaian.php?dataPenilaian=hapus&idPenilaian=<?=$arrDataPenilaian['idPenilaian']?>" class="btn btn-sm btn-danger">hapus</a></td>
             </tr>
             <?php
               endwhile;
@@ -250,31 +245,49 @@ if(isset($_POST['gantiKataSandi'])){
                 endwhile;
               ?>
             </select>
-            <label for="" class="mt-4">Masukan Masing-Masing Nilai Kriteria</label>
-            <input 
-              type="text" 
-              class="form-control mt-3" 
-              placeholder="(C1) Komputer"
+            <label for="" class="mt-3">Komputer (C1)</label>
+            <select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
               name="kriteriaKomputer"
             >
-            <input 
-              type="text" 
-              class="form-control mt-3" 
-              placeholder="(C2) Pendidikan"
+              <option value="0"selected>Memiliki Sertifikat</option>
+              <option value="100">Ya</option>
+              <option value="80">Tidak</option>
+            </select>
+            <label for="" class="mt-3">Pendidikan (C2)</label>
+            <select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
               name="kriteriaPendidikan"
             >
-            <input 
-              type="text" 
-              class="form-control mt-3" 
-              placeholder="(C3) Pengalaman"
+              <option value="0"selected>Jenjang Pendidikan</option>
+              <option value="60">SMA</option>
+              <option value="80">S1</option>
+              <option value="100">S2</option>
+            </select>
+            <label for="" class="mt-3">Pengalaman (C3)</label>
+            <select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
               name="kriteriaPengalaman"
             >
-            <input 
-              type="text" 
-              class="form-control mt-3" 
-              placeholder="(C4) Kendaraan"
+              <option value="0"selected>Lama Pengalaman</option>
+              <option value="60">0 Tahun</option>
+              <option value="80">>= 1 Tahun</option>
+              <option value="100">> 3 Tahun</option>
+            </select>
+            <label for="" class="mt-3">Kendaraan (C4)</label>
+            <select 
+              class="form-select mt-1 form-control" 
+              aria-label="Default select example"
               name="kriteriaKendaraan"
             >
+              <option value="0"selected>Jenis Kendaraan</option>
+              <option value="80">Motor</option>
+              <option value="100">Mobil</option>
+              <option value="60">Tanpa Kendaraan</option>
+            </select>
           </div>
           <div class="modal-footer mt-3">
             <button 
@@ -333,15 +346,6 @@ if(isset($_POST['gantiKataSandi'])){
         buttons: false,
         icon: "success",
         timer: 2000,
-      });
-    }
-  </script>
-  <script>
-    if(alertTotalKriteriaMax) {
-      swal({
-        title: "Maaf",
-        text: "Nilai Kriteria Melebihi Batas",
-        buttons: 'OK',
       });
     }
   </script>

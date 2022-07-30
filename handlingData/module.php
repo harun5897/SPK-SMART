@@ -67,15 +67,32 @@ function updateUser($koneksi, $idUser, $namaUser, $email, $role) {
 }
 
 function simpanKriteria($koneksi, $namaKriteria, $bobotKriteria) {
+  $namaKriteria = $namaKriteria ;
+  $bobotKriteria = $bobotKriteria;
+  $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+  $arrBobotKriteria = [];
+  
   if(!$bobotKriteria || $namaKriteria == 0) {
     header('location: dataKriteria.php?alertDataKosong=true');
   }
   else {
-    mysqli_query($koneksi, "UPDATE `tabelkriteria` SET 
+    while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
+      if($namaKriteria != $arrDataKriteria['idKriteria']) {
+        array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
+      } else {
+        array_push($arrBobotKriteria, $bobotKriteria);
+      }
+    endwhile;
+    $totalBobot = array_sum($arrBobotKriteria);
+    if($totalBobot > 100){
+      header('location: dataKriteria.php?alertTotalKriteriaMax=true');
+    } else {
+      mysqli_query($koneksi, "UPDATE `tabelkriteria` SET 
       `bobotKriteria` = $bobotKriteria
       WHERE `idKriteria` = $namaKriteria
     ");
     header('location: dataKriteria.php?alertBerhasilSimpan=true');
+    }
   }
 }
 
@@ -110,30 +127,23 @@ function hapusPeserta($koneksi, $idPeserta) {
 
 function simpanPenilaian($koneksi, $idPeserta, $kriteriaKomputer, $kriteriaPendidikan, $kriteriaPengalaman, $kriteriaKendaraan) {
 
-  $totalNilaiKriteria = (int)$kriteriaKomputer + (int)$kriteriaPendidikan + (int)$kriteriaPengalaman + (int)$kriteriaKendaraan;
-  if($totalNilaiKriteria > 100){
-    header('location: penilaian.php?alertTotalKriteriaMax=true');
+  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
+
+  if($idPeserta == '' || !$kriteriaKomputer || !$kriteriaPendidikan || !$kriteriaPengalaman || !$kriteriaKendaraan) {
+    header('location: penilaian.php?alertDataKosong=true');
   }
   else {
-    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-    $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
-
-    if($idPeserta == '' || !$kriteriaKomputer || !$kriteriaPendidikan || !$kriteriaPengalaman || !$kriteriaKendaraan) {
-      header('location: penilaian.php?alertDataKosong=true');
+    if($arrDataPenilaian['idPeserta'] == $idPeserta) {
+      mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `idPeserta` = '$idPeserta', `kriteriaKomputer` = '$kriteriaKomputer', `kriteriaPendidikan` = '$kriteriaPendidikan', `kriteriaPengalaman` = '$kriteriaPengalaman', `kriteraKendaraan` = '$kriteriaKendaraan'
+      WHERE `idPeserta` = '$idPeserta'");
+      header('location: penilaian.php?alertBerhasilUpdate=true');
     }
     else {
-      if($arrDataPenilaian['idPeserta'] == $idPeserta) {
-        mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `idPeserta` = '$idPeserta', `kriteriaKomputer` = '$kriteriaKomputer', `kriteriaPendidikan` = '$kriteriaPendidikan', `kriteriaPengalaman` = '$kriteriaPengalaman', `kriteraKendaraan` = '$kriteriaKendaraan'
-        WHERE `idPeserta` = '$idPeserta'");
-        header('location: penilaian.php?alertBerhasilUpdate=true');
-      }
-      else {
-        mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES ('$idPeserta', '$kriteriaKomputer', '$kriteriaPendidikan', '$kriteriaPengalaman', '$kriteriaKendaraan')");
-        header('location: penilaian.php?alertBerhasilSimpan=true');
-      }
+      mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES ('$idPeserta', '$kriteriaKomputer', '$kriteriaPendidikan', '$kriteriaPengalaman', '$kriteriaKendaraan')");
+      header('location: penilaian.php?alertBerhasilSimpan=true');
     }
   }
-  
 }
 
 function hapusPenilaian($koneksi, $idPenilaian) {
