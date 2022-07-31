@@ -107,7 +107,7 @@ if(isset($_POST['gantiKataSandi'])){
   <!-- Content -->
   <div class="content container-md card">
     <div class="card-header">
-      Data Peserta
+      Data Alternatif
     </div>
     <div class="card-body">
       <div class="row">
@@ -115,7 +115,7 @@ if(isset($_POST['gantiKataSandi'])){
           <a href="dataPeserta.php" style="text-decoration: none;">
             <div class="card">
               <div class="card-body">
-                Data Peserta
+              Data Alternatif
               </div>
             </div>
           </a>

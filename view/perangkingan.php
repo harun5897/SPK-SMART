@@ -88,7 +88,7 @@ if($_SESSION['loginStatus'] != 1) {
           <a href="dataPeserta.php" style="text-decoration: none;">
             <div class="card">
               <div class="card-body">
-                Data Peserta
+                Data Alternatif
               </div>
             </div>
           </a>
