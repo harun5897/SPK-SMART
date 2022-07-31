@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2022 at 06:37 AM
+-- Generation Time: Jul 31, 2022 at 06:07 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.33
 
@@ -63,7 +63,10 @@ CREATE TABLE `tabelpenilaian` (
 --
 
 INSERT INTO `tabelpenilaian` (`idPenilaian`, `idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES
-(11, 4, 11, 11, 11, 11);
+(21, 4, 100, 80, 80, 80),
+(22, 6, 100, 80, 80, 100),
+(23, 7, 100, 60, 100, 100),
+(24, 8, 100, 60, 100, 100);
 
 -- --------------------------------------------------------
 
@@ -89,7 +92,10 @@ CREATE TABLE `tabelpeserta` (
 --
 
 INSERT INTO `tabelpeserta` (`idPeserta`, `namaDepan`, `namaBelakang`, `nik`, `tanggalLahir`, `jenisKelamin`, `agama`, `alamat`, `email`, `kontak`) VALUES
-(4, 'joko ', 'susilo', '123456789', '1993-08-08', 'laki-laki', 'islam', 'Yogyakarta ', 'joko@gmail.com', '+62 081360271959');
+(4, 'Andika', 'Pratama', '123456789', '1993-08-08', 'laki-laki', 'islam', 'Yogyakarta ', 'joko@gmail.com', '+62 081360271959'),
+(6, 'Angelia', 'Purnama', '123456789', '1997-08-05', 'perempuan', 'Islam', ' Tanjung Pinang', 'rudi@gmail.com', '081660271959'),
+(7, 'Bambang', 'Cahyo', '123456789', '1996-08-08', 'laki-laki', 'islam', 'tanjung pinang ', 'ari@gmail.com', '0987654321'),
+(8, 'Clara', 'Prisilia', '098765432', '1997-08-05', 'perempuan', 'Islam', 'Tanjung Pinang ', 'clara@gmail.com', '081246781959');
 
 -- --------------------------------------------------------
 
@@ -110,7 +116,8 @@ CREATE TABLE `tabeluser` (
 --
 
 INSERT INTO `tabeluser` (`idUser`, `namaUser`, `email`, `kataSandi`, `role`) VALUES
-(1, 'Admin', 'admin@gmail.com', '123456', 'admin');
+(1, 'Admin', 'admin@gmail.com', '12345', 'superAdmin'),
+(8, 'adminKedua', 'adminkedua@gmail.com', '12345', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -154,19 +161,19 @@ ALTER TABLE `tabelkriteria`
 -- AUTO_INCREMENT for table `tabelpenilaian`
 --
 ALTER TABLE `tabelpenilaian`
-  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tabelpeserta`
 --
 ALTER TABLE `tabelpeserta`
-  MODIFY `idPeserta` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idPeserta` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tabeluser`
 --
 ALTER TABLE `tabeluser`
-  MODIFY `idUser` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idUser` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
