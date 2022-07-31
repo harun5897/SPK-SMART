@@ -165,18 +165,6 @@ if(isset($_POST['pesertaTerbaik'])) {
               endwhile;
             ?>
           </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
 
           <h4 class="mt-4 bg-warning py-1 ps-1">Tabel Utility</h4>
           <table id="myTable" class="table table-hover">
@@ -208,18 +196,6 @@ if(isset($_POST['pesertaTerbaik'])) {
               endwhile;
             ?>
           </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
 
           <h4 class="mt-4 bg-warning py-1 ps-1">Tabel Nilai Akhir</h4>
           <table id="myTable" class="table table-hover">
@@ -254,18 +230,6 @@ if(isset($_POST['pesertaTerbaik'])) {
 
             ?>
           </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -198,18 +198,6 @@ if(isset($_POST['gantiKataSandi'])){
               endwhile;
             ?>
           </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
