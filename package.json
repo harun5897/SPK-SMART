@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-fpdf": "^1.0.40"
+  }
+}

@@ -120,7 +120,7 @@ if($_SESSION['loginStatus'] != 1) {
           <div class="d-flex justify-content-between">
               <div class="button">
                 <a
-                  href=""
+                  href="cetak.php"
                   class="btn btn-md btn-success" 
                 > Cetak PDF </a>
               </div>
