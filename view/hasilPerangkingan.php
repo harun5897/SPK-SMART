@@ -6,9 +6,7 @@ include_once('../handlingData/koneksi.php');
 if($_SESSION['loginStatus'] != 1) {
   header('location: index.php?alertBelumLogin=true');
 }
-if(isset($_POST['pesertaTerbaik'])) {
-  pesertaTerbaik($koneksi);
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -84,7 +82,7 @@ if(isset($_POST['pesertaTerbaik'])) {
   <!-- Content -->
   <div class="content container-md card" style="margin-top: 6.3rem;">
     <div class="card-header">
-      Langkah Perangkingan
+      Hasil Perangkingan
     </div>
     <div class="card-body">
       <div class="row">
@@ -120,138 +118,43 @@ if(isset($_POST['pesertaTerbaik'])) {
         </div>
         <div class="col-lg-9 px-3">
           <div class="d-flex justify-content-between">
-            <form action="" method="POST">
               <div class="button">
-                <button
-                  type="submit"
+                <a
+                  href=""
                   class="btn btn-md btn-success" 
-                  name="pesertaTerbaik"
-                > Peserta Terbaik </button>
+                > Cetak PDF </a>
               </div>
-            </form>
             <div class="form">
               <input id="search" type="text" class="form-control" placeholder="Cari">
             </div>
           </div>
           <hr>
-          <h4 class="mt-2 bg-warning py-1 ps-1">Tabel Nilai</h4>
+          <h4 class="mt-2 bg-warning py-1 ps-1">Hasil Ranking</h4>
           <table id="myTable" class="table table-hover">
             <tr>
               <th class="text-center">No</th>
               <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
+              <th class="text-center">Kontak</th>
+              <th class="text-center">Nilai Akhir</th>
             </tr>
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+              $id = 0;
+              for($i = 0; $i < count($_SESSION['hasilRanking'][0]); $i++) {
                 $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
+                $id = $_SESSION['hasilRanking'][0][$i];
+                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$id'");
                 $arrDataPeserta = mysqli_fetch_array($dataPeserta);
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
               <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteraKendaraan']?></td>
-            </tr>
-            <?php
-              endwhile;
-            ?>
-          </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
+              <td class="text-center"><?=$arrDataPeserta['kontak']?></td>
+              <td class="text-center"><?= $_SESSION['hasilRanking'][1][$i]?></td>
 
-          <h4 class="mt-4 bg-warning py-1 ps-1">Tabel Utility</h4>
-          <table id="myTable" class="table table-hover">
-            <tr>
-              <th class="text-center">No</th>
-              <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
             </tr>
             <?php
-              $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
-                $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $arrDataUtility = getUtility($koneksi, $idPeserta, $arrDataPenilaian['kriteriaKomputer'], $arrDataPenilaian['kriteriaPendidikan'], $arrDataPenilaian['kriteriaPengalaman'], $arrDataPenilaian['kriteraKendaraan']);
-            ?>
-            <tr>
-              <td class="text-center"><?php echo $no; ?></td>
-              <td class="text-center"><?=$arrDataUtility[1]['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityKomputer']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityPendidikan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityPengalaman']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityKendaraan']?></td>
-            </tr>
-            <?php
-              endwhile;
-            ?>
-          </table>
-          <div class="d-flex justify-content-between">
-            <div>
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo; Previous</span>
-              </a>
-            </div>
-            <div>
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">Next &raquo;</span>
-              </a>
-            </div>
-          </div>
-
-          <h4 class="mt-4 bg-warning py-1 ps-1">Tabel Nilai Akhir</h4>
-          <table id="myTable" class="table table-hover">
-            <tr>
-              <th class="text-center">No</th>
-              <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
-              <th class="text-center">Nilai Akhir</th>
-            </tr>
-            <?php
-              $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
-                $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $arrDataUtility = getNilaiAkhir($koneksi, $idPeserta, $arrDataPenilaian['kriteriaKomputer'], $arrDataPenilaian['kriteriaPendidikan'], $arrDataPenilaian['kriteriaPengalaman'], $arrDataPenilaian['kriteraKendaraan']);
-            ?>
-            <tr>
-              <td class="text-center"><?php echo $no; ?></td>
-              <td class="text-center"><?=$arrDataUtility[1]['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirKomputer']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirPendidikan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirPengalaman']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirKendaraan']?></td>
-              <td class="text-center"><?=$arrDataUtility[2]?></td>
-            </tr>
-            <?php
-              endwhile;
-
+              }
             ?>
           </table>
           <div class="d-flex justify-content-between">
