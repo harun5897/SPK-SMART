@@ -27,15 +27,40 @@ if(isset($_GET['alertBerhasilHapus'])) {
     <script>var alertBerhasilHapus = true;</script>
   <?php
 }
+if(isset($_GET['alertDataSudahAda'])) {
+  ?>
+    <script>var alertDataSudahAda = true;</script>
+  <?php
+}
+if(isset($_GET['alertDataKriteraKosong'])) {
+  ?>
+    <script>var alertDataKriteraKosong = true;</script>
+  <?php
+}
 
 if(isset($_POST['simpanPenilaian'])) {
-  simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['kriteriaKomputer'], $_POST['kriteriaPendidikan'], $_POST['kriteriaPengalaman'], $_POST['kriteriaKendaraan']);
+  simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['idKriteria'], $_POST['nilaiKriteria']);
 }
 
 if(isset($_GET['dataPenilaian'])) {
   if($_GET['dataPenilaian'] == 'hapus') {
-    $idPenilaian = $_GET['idPenilaian'];
-    hapusPenilaian($koneksi, $idPenilaian);
+    $idPeserta = $_GET['idPeserta'];
+    hapusPenilaian($koneksi, $idPeserta);
+  }
+}
+if(isset($_POST['updatePenilaian'])) {
+  $idPeserta = $_GET['idPeserta'];
+  updatePenilaian($koneksi, $idPeserta, $_POST['idKriteria'], $_POST['nilaiKriteria']);
+}
+
+if(isset($_GET['dataPenilaian'])){
+  if($_GET['dataPenilaian'] == 'update') {
+    $idPeserta = $_GET['idPeserta'];
+    $dataPenilaianEdit = mysqli_query($koneksi, "SELECT * FROM `tabelpeserta` WHERE `idPeserta` = '$idPeserta'");
+    $arrDataPenilaianEdit = mysqli_fetch_array($dataPenilaianEdit);
+    ?>
+      <script>var updateDataPenilaian = true;</script>
+    <?php
   }
 }
 
@@ -170,29 +195,42 @@ if(isset($_POST['gantiKataSandi'])){
             <tr>
               <th class="text-center">No</th>
               <th class="text-center">Nama</th>
-              <th class="text-center">Komputer</th>
-              <th class="text-center">Pendidikan</th>
-              <th class="text-center">Pengalaman</th>
-              <th class="text-center">Kendaraan</th>
-              <th class="text-center">Aksi</th>
+              <?php
+                $dataTabelKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataTabelKriteria = mysqli_fetch_array($dataTabelKriteria)) :
+              ?>
+              <th class="text-center"><?=$arrDataTabelKriteria['namaKriteria']?></th>
+              <?php
+                endwhile;
+              ?>
+              <th class="text-center">Action</th>
             </tr>
+
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
-                $arrDataPeserta = mysqli_fetch_array($dataPeserta);
+              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+                $idPeserta = $arrDataPeserta['idPeserta'];
                 $no++;
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
               <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteraKendaraan']?></td>
-              <td class="text-center"><a href="penilaian.php?dataPenilaian=hapus&idPenilaian=<?=$arrDataPenilaian['idPenilaian']?>" class="btn btn-sm btn-danger">hapus</a></td>
+              <?php
+                $dataKriteria = mysqli_query($koneksi, "SELECT * FROM `tabelkriteria`");
+                while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+                  $idKriteria = $arrDataKriteria['idKriteria'];
+                  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria'");
+                  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian)
+              ?>
+                <td class="text-center"><?=$arrDataPenilaian['nilaiKriteria']?></td>
+              <?php
+                endwhile;
+              ?>
+              <td class="text-center">
+                <a href="penilaian.php?dataPenilaian=update&idPeserta=<?=$arrDataPeserta['idPeserta']?>" class="btn btn-warning btn-sm">Edit</a>
+                <a href="penilaian.php?dataPenilaian=hapus&idPeserta=<?=$arrDataPeserta['idPeserta']?>" class="btn btn-sm btn-danger">hapus</a>
+              </td>
             </tr>
             <?php
               endwhile;
@@ -233,49 +271,27 @@ if(isset($_POST['gantiKataSandi'])){
                 endwhile;
               ?>
             </select>
-            <label for="" class="mt-3">Komputer (C1)</label>
             <select 
-              class="form-select mt-1 form-control" 
+              class="form-select mt-3 form-control" 
               aria-label="Default select example"
-              name="kriteriaKomputer"
+              name="idKriteria"
             >
-              <option value="0"selected>Memiliki Sertifikat</option>
-              <option value="100">Ya</option>
-              <option value="80">Tidak</option>
+              <option value="" selected> Pilih Kriteria</option>
+              <?php 
+                $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+              ?>
+              <option value="<?=$arrDataKriteria['idKriteria']?>"><?=$arrDataKriteria['namaKriteria']?></option>
+              <?php
+                endwhile;
+              ?>
             </select>
-            <label for="" class="mt-3">Pendidikan (C2)</label>
-            <select 
-              class="form-select mt-1 form-control" 
-              aria-label="Default select example"
-              name="kriteriaPendidikan"
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="Masukan Nilai Kriteria"
+              name="nilaiKriteria"
             >
-              <option value="0"selected>Jenjang Pendidikan</option>
-              <option value="60">SMA</option>
-              <option value="80">S1</option>
-              <option value="100">S2</option>
-            </select>
-            <label for="" class="mt-3">Pengalaman (C3)</label>
-            <select 
-              class="form-select mt-1 form-control" 
-              aria-label="Default select example"
-              name="kriteriaPengalaman"
-            >
-              <option value="0"selected>Lama Pengalaman</option>
-              <option value="60">0 Tahun</option>
-              <option value="80">>= 1 Tahun</option>
-              <option value="100">> 3 Tahun</option>
-            </select>
-            <label for="" class="mt-3">Kendaraan (C4)</label>
-            <select 
-              class="form-select mt-1 form-control" 
-              aria-label="Default select example"
-              name="kriteriaKendaraan"
-            >
-              <option value="0"selected>Jenis Kendaraan</option>
-              <option value="80">Motor</option>
-              <option value="100">Mobil</option>
-              <option value="60">Tanpa Kendaraan</option>
-            </select>
           </div>
           <div class="modal-footer mt-3">
             <button 
@@ -291,6 +307,59 @@ if(isset($_POST['gantiKataSandi'])){
     </div>
   </div>
 
+  <!-- Modal Edit Data Kriteria-->
+  <div class="modal fade" 
+    tabindex="-1"
+    id="exampleModal1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Data Penilaian</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+          <div class="modal-body">
+            <label for="">
+              <?=$arrDataPenilaianEdit['namaDepan']?> <?=$arrDataPenilaianEdit['namaBelakang']?>
+            </label>
+            <select 
+              class="form-select mt-3 form-control" 
+              aria-label="Default select example"
+              name="idKriteria"
+            >
+              <option value="" selected> Pilih Kriteria</option>
+              <?php 
+                $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+              ?>
+              <option value="<?=$arrDataKriteria['idKriteria']?>"><?=$arrDataKriteria['namaKriteria']?></option>
+              <?php
+                endwhile;
+              ?>
+            </select>
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="Masukan Nilai Kriteria"
+              name="nilaiKriteria"
+            >
+          </div>
+          <div class="modal-footer mt-3">
+            <button 
+              type="submit" 
+              class="btn btn-warning"
+              name="updatePenilaian"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
   <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -336,6 +405,33 @@ if(isset($_POST['gantiKataSandi'])){
         timer: 2000,
       });
     }
+  </script>
+  <script>
+    if(alertDataSudahAda) {
+      swal({
+        title: "Sorry",
+        text: "Data Sudah Ada",
+        buttons: 'OK',
+      });
+    }
+  </script>
+  <script>
+    if(alertDataKriteraKosong) {
+      swal({
+        title: "Sorry",
+        text: "Data Kriteria Anda Masih Kosong",
+        buttons: 'OK',
+      });
+    }
+  </script>
+  
+  <script>
+  if (updateDataPenilaian) {
+    const myModal = new bootstrap.Modal(document.getElementById("exampleModal1"), {});
+    document.onreadystatechange = function () {
+      myModal.show()
+    }
+  }
   </script>
 </body>
 </html>

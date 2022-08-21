@@ -17,19 +17,47 @@ if(isset($_GET['alertBerhasilSimpan'])) {
     <script>var alertBerhasilSimpan = true;</script>
   <?php
 }
+if(isset($_GET['alertBerhasilHapus'])) {
+  ?>
+    <script>var alertBerhasilHapus = true;</script>
+  <?php
+}
 if(isset($_GET['alertTotalKriteriaMax'])) {
   ?>
     <script>var alertTotalKriteriaMax = true;</script>
   <?php
 }
 
+if(isset($_GET['dataKriteria'])){
+  if($_GET['dataKriteria'] == 'update') {
+    $idKriteria = $_GET['idKriteria'];
+    $dataKriteriaEdit = mysqli_query($koneksi, "SELECT * FROM `tabelkriteria` WHERE `idKriteria` = '$idKriteria'");
+    $arrDataKriteriaEdit = mysqli_fetch_array($dataKriteriaEdit);
+    ?>
+      <script>var updateDataKriteria = true;</script>
+    <?php
+  }
+}
+
+if(isset($_GET['dataKriteria'])){
+  if($_GET['dataKriteria'] == 'hapus') {
+    $idKriteria = $_GET['idKriteria'];
+    hapusKriteria($koneksi, $idKriteria);
+  }
+}
+
 if(isset($_POST['simpanKriteria'])) {
   simpanKriteria($koneksi, $_POST['namaKriteria'],$_POST['bobotKriteria']);
+}
+
+if(isset($_POST['updateKriteria'])) {
+  updateKriteria($koneksi, $_POST['namaKriteria'],$_POST['bobotKriteria'], $idKriteria);
 }
 
 if(isset($_POST['gantiKataSandi'])){
   gantiKataSandi($koneksi, $_POST['kataSandiLama'], $_POST['kataSandiBaru'], $_SESSION['idUser']);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -147,7 +175,7 @@ if(isset($_POST['gantiKataSandi'])){
                 class="btn btn-md btn-success" 
                 data-bs-toggle="modal" 
                 data-bs-target="#exampleModal"
-              > Nilai Kriteria </a>
+              > Tambah Kriteria </a>
             </div>
             <div class="form">
               <input id="search" type="text" class="form-control" placeholder="Cari">
@@ -159,6 +187,7 @@ if(isset($_POST['gantiKataSandi'])){
               <th>No</th>
               <th>Nama Kriteria</th>
               <th>Bobot</th>
+              <th>Action</th>
             </tr>
             <?php
               $no = 0;
@@ -170,6 +199,20 @@ if(isset($_POST['gantiKataSandi'])){
               <td><?php echo $no; ?></td>
               <td><?=$arrDataKriteria['namaKriteria']?></td>
               <td><?=$arrDataKriteria['bobotKriteria']?></td>
+              <td>
+                <a 
+                  href="dataKriteria.php?dataKriteria=update&idKriteria=<?=$arrDataKriteria['idKriteria']?>" 
+                  class="btn btn-warning btn-sm"
+                > 
+                  Edit 
+                </a>
+                <a 
+                  href="dataKriteria.php?dataKriteria=hapus&idKriteria=<?=$arrDataKriteria['idKriteria']?>" 
+                  class="btn btn-danger btn-sm"
+                > 
+                  Hapus 
+                </a>
+              </td>
             </tr>
             <?php
               endwhile;
@@ -190,26 +233,21 @@ if(isset($_POST['gantiKataSandi'])){
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Masukan Nilai Kriteria</h5>
+          <h5 class="modal-title">Masukan Data Kriteria</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="" method="POST">
           <div class="modal-body">
-            <select 
-              class="form-select mt-3 form-control" 
-              aria-label="Default select example"
-              name="namaKriteria"
-            >
-              <option value="0"selected>Pilih Data Kriteria</option>
-              <option value="1">Komputer</option>
-              <option value="2">Pendidikan</option>
-              <option value="3">Pengalaman</option>
-              <option value="4">Kendaraan</option>
-            </select>
             <input 
               type="text" 
               class="form-control mt-3" 
-              placeholder="Masukan Nilai"
+              placeholder="Masukan Nama Kriteria"
+              name="namaKriteria"
+            >
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="Masukan Bobot Kriteria"
               name="bobotKriteria"
             >
           </div>
@@ -218,6 +256,50 @@ if(isset($_POST['gantiKataSandi'])){
               type="submit" 
               class="btn btn-primary"
               name="simpanKriteria"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Data Kriteria-->
+  <div class="modal fade" 
+    tabindex="-1"
+    id="exampleModal1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Data Kriteria</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+          <div class="modal-body">
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="Masukan Nama Kriteria"
+              name="namaKriteria"
+              value="<?=$arrDataKriteriaEdit['namaKriteria']?>"
+            >
+            <input 
+              type="text" 
+              class="form-control mt-3" 
+              placeholder="Masukan Bobot Kriteria"
+              name="bobotKriteria"
+              value="<?=$arrDataKriteriaEdit['bobotKriteria']?>"
+            >
+          </div>
+          <div class="modal-footer mt-3">
+            <button 
+              type="submit" 
+              class="btn btn-warning"
+              name="updateKriteria"
             >
               Simpan
             </button>
@@ -252,6 +334,17 @@ if(isset($_POST['gantiKataSandi'])){
     }
   </script>
   <script>
+    if(alertBerhasilHapus) {
+      swal({
+        title: "Success",
+        text: "Data Berhasil di Hapus",
+        buttons: false,
+        icon: "success",
+        timer: 2000,
+      });
+    }
+  </script>
+  <script>
     if(alertTotalKriteriaMax) {
       swal({
         title: "Maaf",
@@ -259,6 +352,15 @@ if(isset($_POST['gantiKataSandi'])){
         buttons: 'OK',
       });
     }
+  </script>
+
+  <script>
+  if (updateDataKriteria) {
+    const myModal = new bootstrap.Modal(document.getElementById("exampleModal1"), {});
+    document.onreadystatechange = function () {
+      myModal.show()
+    }
+  }
   </script>
 </body>
 </html>

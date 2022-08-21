@@ -67,33 +67,59 @@ function updateUser($koneksi, $idUser, $namaUser, $email, $role) {
 }
 
 function simpanKriteria($koneksi, $namaKriteria, $bobotKriteria) {
-  $namaKriteria = $namaKriteria ;
-  $bobotKriteria = $bobotKriteria;
   $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
   $arrBobotKriteria = [];
   
-  if(!$bobotKriteria || $namaKriteria == 0) {
+  if(!$bobotKriteria || !$namaKriteria) {
     header('location: dataKriteria.php?alertDataKosong=true');
   }
   else {
     while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
-      if($namaKriteria != $arrDataKriteria['idKriteria']) {
+      array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
+    endwhile;
+
+    echo $namaKriteria; echo '<br>';
+    echo $bobotKriteria; echo '<br>';
+    print_r($arrBobotKriteria);
+
+    $totalBobot = array_sum($arrBobotKriteria);
+    if($totalBobot + $bobotKriteria > 100){
+      header('location: dataKriteria.php?alertTotalKriteriaMax=true');
+    } else {
+      mysqli_query($koneksi, "INSERT INTO `tabelkriteria` (`namaKriteria`, `bobotKriteria`) VALUES ('$namaKriteria', '$bobotKriteria')");
+      header('location: dataKriteria.php?alertBerhasilSimpan=true');
+    }
+  }
+}
+
+function updateKriteria($koneksi, $namaKriteria, $bobotKriteria, $idKriteria) {
+  $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+  $arrBobotKriteria = [];
+
+  if(!$bobotKriteria || !$namaKriteria) {
+    header('location: dataKriteria.php?alertDataKosong=true');
+  }
+  else {
+    while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
+      if($idKriteria != $arrDataKriteria['idKriteria']) {
         array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
       } else {
         array_push($arrBobotKriteria, $bobotKriteria);
       }
     endwhile;
     $totalBobot = array_sum($arrBobotKriteria);
-    if($totalBobot > 100){
+    if($totalBobot > 100) {
       header('location: dataKriteria.php?alertTotalKriteriaMax=true');
     } else {
-      mysqli_query($koneksi, "UPDATE `tabelkriteria` SET 
-      `bobotKriteria` = $bobotKriteria
-      WHERE `idKriteria` = $namaKriteria
-    ");
-    header('location: dataKriteria.php?alertBerhasilSimpan=true');
+      mysqli_query($koneksi, "UPDATE `tabelkriteria` SET `bobotKriteria` = $bobotKriteria WHERE `idKriteria` = $idKriteria ");
+      header('location: dataKriteria.php?alertBerhasilSimpan=true');
     }
   }
+}
+
+function hapusKriteria ($koneksi, $idKriteria) {
+  mysqli_query($koneksi, "DELETE FROM `tabelkriteria` WHERE `idKriteria` = '$idKriteria'");
+  header('location: dataKriteria.php?alertBerhasilHapus=true');
 }
 
 function simpanPeserta($koneksi, $namaDepan, $namaBelakang, $nik, $tanggalLahir, $jenisKelamin, $agama,    $alamat, $email, $kontak) {
@@ -125,29 +151,64 @@ function hapusPeserta($koneksi, $idPeserta) {
   header('location: dataPeserta.php?alertBerhasilHapus=true');
 }
 
-function simpanPenilaian($koneksi, $idPeserta, $kriteriaKomputer, $kriteriaPendidikan, $kriteriaPengalaman, $kriteriaKendaraan) {
-
-  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
-
-  if($idPeserta == '' || !$kriteriaKomputer || !$kriteriaPendidikan || !$kriteriaPengalaman || !$kriteriaKendaraan) {
+function simpanPenilaian($koneksi, $idPeserta, $idKriteria, $nilaiKriteria) {
+  if($idPeserta == '' || $idKriteria == '' || !$nilaiKriteria) {
     header('location: penilaian.php?alertDataKosong=true');
   }
   else {
-    if($arrDataPenilaian['idPeserta'] == $idPeserta) {
-      mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `idPeserta` = '$idPeserta', `kriteriaKomputer` = '$kriteriaKomputer', `kriteriaPendidikan` = '$kriteriaPendidikan', `kriteriaPengalaman` = '$kriteriaPengalaman', `kriteraKendaraan` = '$kriteriaKendaraan'
-      WHERE `idPeserta` = '$idPeserta'");
-      header('location: penilaian.php?alertBerhasilUpdate=true');
+    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+    $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
+    if(!$arrDataPenilaian) {
+      mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES ('$idPeserta', '$idKriteria', '$nilaiKriteria')");
+      header('location: penilaian.php?alertBerhasilSimpan=true');
     }
     else {
-      mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES ('$idPeserta', '$kriteriaKomputer', '$kriteriaPendidikan', '$kriteriaPengalaman', '$kriteriaKendaraan')");
-      header('location: penilaian.php?alertBerhasilSimpan=true');
+      $cek = true;
+      $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+      while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
+        if($arrDataPenilaian['idKriteria'] == $idKriteria) {
+          header('location: penilaian.php?alertDataSudahAda=true');
+          $cek = false;
+          break;
+        }
+      endwhile;
+
+      if($cek == true) {
+        mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES ('$idPeserta', '$idKriteria', '$nilaiKriteria')");
+        header('location: penilaian.php?alertBerhasilSimpan=true');
+      }
     }
   }
 }
 
-function hapusPenilaian($koneksi, $idPenilaian) {
-  mysqli_query($koneksi, "DELETE FROM `tabelpenilaian` WHERE `idPenilaian` = '$idPenilaian'");
+function updatePenilaian($koneksi, $idPeserta, $idKriteria, $nilaiKriteria) {
+  if($idKriteria == '' || !$nilaiKriteria) {
+    header('location: penilaian.php?alertDataKosong=true');
+  } else {
+    $cek = true;
+    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+    while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
+      if($arrDataPenilaian['idKriteria'] == $idKriteria) {
+        $dataPenilaianFilter = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria' ");
+        $arrDataPenilaianFilter =  mysqli_fetch_array($dataPenilaianFilter);
+        $idPenilaian = $arrDataPenilaianFilter['idPenilaian'];
+        mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `nilaiKriteria` = '$nilaiKriteria'
+        WHERE `idPenilaian` = '$idPenilaian'
+        ");
+        header('location: penilaian.php?alertBerhasilUpdate=true');
+        $cek = false;
+        break;
+      }
+    endwhile;
+
+    if($cek == true) {
+      header('location: penilaian.php?alertDataKriteraKosong=true');
+    }
+  }
+}
+
+function hapusPenilaian($koneksi, $idPeserta) {
+  mysqli_query($koneksi, "DELETE FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta'");
   header('location: penilaian.php?alertBerhasilHapus=true');
 }
 ?>
