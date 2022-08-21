@@ -129,29 +129,39 @@ if($_SESSION['loginStatus'] != 1) {
           <hr>
           <table id="myTable" class="table table-hover">
             <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>C1</th>
-              <th>C2</th>
-							<th>C3</th>
-              <th>C4</th>
+              <th class="text-center">No</th>
+              <th class="text-center">Nama</th>
+              <?php
+                $dataTabelKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataTabelKriteria = mysqli_fetch_array($dataTabelKriteria)) :
+              ?>
+              <th class="text-center"><?=$arrDataTabelKriteria['namaKriteria']?></th>
+              <?php
+                endwhile;
+              ?>
             </tr>
+
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+                $idPeserta = $arrDataPeserta['idPeserta'];
                 $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
-                $arrDataPeserta = mysqli_fetch_array($dataPeserta);
             ?>
             <tr>
-              <td><?php echo $no; ?></td>
-              <td><?=$arrDataPeserta['namaDepan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <td class="text-center"><?php echo $no; ?></td>
+              <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
+              <?php
+                $dataKriteria = mysqli_query($koneksi, "SELECT * FROM `tabelkriteria`");
+                while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+                  $idKriteria = $arrDataKriteria['idKriteria'];
+                  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria'");
+                  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian)
+              ?>
+                <td class="text-center"><?=$arrDataPenilaian['nilaiKriteria']?></td>
+              <?php
+                endwhile;
+              ?>
             </tr>
             <?php
               endwhile;

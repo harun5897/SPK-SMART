@@ -138,23 +138,24 @@ if($_SESSION['loginStatus'] != 1) {
               <th class="text-center">Nilai Akhir</th>
             </tr>
             <?php
-              $no = 0;
-              $id = 0;
-              for($i = 0; $i < count($_SESSION['hasilRanking'][0]); $i++) {
-                $no++;
-                $id = $_SESSION['hasilRanking'][0][$i];
-                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$id'");
+              $rankingIdPeserta = $_SESSION['RankingIdPeserta'];
+              $rankingNilaiAkhir = $_SESSION['RankingNilaiAKhir'];
+              $no = 1;
+              $i = 0;
+              foreach($rankingIdPeserta as $id):
+                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM `tabelpeserta`  WHERE `idPeserta` = '$id'");
                 $arrDataPeserta = mysqli_fetch_array($dataPeserta);
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
               <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
               <td class="text-center"><?=$arrDataPeserta['kontak']?></td>
-              <td class="text-center"><?= $_SESSION['hasilRanking'][1][$i]?></td>
-
+              <td class="text-center"><?= $rankingNilaiAkhir[$i]?></td>
             </tr>
             <?php
-              }
+              $no++;
+              $i++;
+              endforeach;
             ?>
           </table>
         </div>

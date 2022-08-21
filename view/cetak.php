@@ -29,12 +29,12 @@ class myPDF extends FPDF {
     $this->Cell(90, 10, 'Kontak', 1,0, 'C');
     $this->Cell(80, 10, 'Nilai', 1,0, 'C');
 
-    $no = 0;
-    $id = 0;
-    for($i = 0; $i < count($_SESSION['hasilRanking'][0]); $i++) {
-      $no++;
-      $id = $_SESSION['hasilRanking'][0][$i];
-      $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$id'");
+    $rankingIdPeserta = $_SESSION['RankingIdPeserta'];
+    $rankingNilaiAkhir = $_SESSION['RankingNilaiAKhir'];
+    $no = 1;
+    $i = 0;
+    foreach($rankingIdPeserta as $id):
+      $dataPeserta = mysqli_query($koneksi, "SELECT * FROM `tabelpeserta`  WHERE `idPeserta` = '$id'");
       $arrDataPeserta = mysqli_fetch_array($dataPeserta);
       
       $this->ln();
@@ -42,8 +42,10 @@ class myPDF extends FPDF {
       $this->Cell(15, 10, $no, 1,0, 'C');
       $this->Cell(90, 10, $arrDataPeserta['namaDepan'], 1,0,'C');
       $this->Cell(90, 10, $arrDataPeserta['kontak'], 1,0, 'C');
-      $this->Cell(80, 10, $_SESSION['hasilRanking'][1][$i], 1,0, 'C');
-    }
+      $this->Cell(80, 10, $rankingNilaiAkhir[$i] , 1,0, 'C');
+      $no++;
+      $i++;
+    endforeach;
     
   }
   function Footer()

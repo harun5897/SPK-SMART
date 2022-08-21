@@ -6,9 +6,6 @@ include_once('../handlingData/koneksi.php');
 if($_SESSION['loginStatus'] != 1) {
   header('location: index.php?alertBelumLogin=true');
 }
-if(isset($_POST['pesertaTerbaik'])) {
-  pesertaTerbaik($koneksi);
-}
 ?>
 
 <!DOCTYPE html>
@@ -83,6 +80,11 @@ if(isset($_POST['pesertaTerbaik'])) {
 
   <!-- Content -->
   <div class="content container-md card" style="margin-top: 6.3rem;">
+  <?php
+    if(isset($_POST['pesertaTerbaik'])) {
+      pesertaTerbaik($koneksi);
+    }
+  ?>
     <div class="card-header">
       Langkah Perangkingan
     </div>
@@ -139,27 +141,37 @@ if(isset($_POST['pesertaTerbaik'])) {
             <tr>
               <th class="text-center">No</th>
               <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
+              <?php
+                $dataTabelKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataTabelKriteria = mysqli_fetch_array($dataTabelKriteria)) :
+              ?>
+              <th class="text-center"><?=$arrDataTabelKriteria['namaKriteria']?></th>
+              <?php
+                endwhile;
+              ?>
             </tr>
+
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+                $idPeserta = $arrDataPeserta['idPeserta'];
                 $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta WHERE idPeserta = '$idPeserta'");
-                $arrDataPeserta = mysqli_fetch_array($dataPeserta);
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
               <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaKomputer']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPendidikan']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteriaPengalaman']?></td>
-              <td class="text-center"><?=$arrDataPenilaian['kriteraKendaraan']?></td>
+              <?php
+                $dataKriteria = mysqli_query($koneksi, "SELECT * FROM `tabelkriteria`");
+                while($arrDataKriteria = mysqli_fetch_array($dataKriteria)) :
+                  $idKriteria = $arrDataKriteria['idKriteria'];
+                  $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria'");
+                  $arrDataPenilaian = mysqli_fetch_array($dataPenilaian)
+              ?>
+                <td class="text-center"><?=$arrDataPenilaian['nilaiKriteria']?></td>
+              <?php
+                endwhile;
+              ?>
             </tr>
             <?php
               endwhile;
@@ -171,26 +183,33 @@ if(isset($_POST['pesertaTerbaik'])) {
             <tr>
               <th class="text-center">No</th>
               <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
+              <?php
+                $dataTabelKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataTabelKriteria = mysqli_fetch_array($dataTabelKriteria)) :
+              ?>
+              <th class="text-center"><?=$arrDataTabelKriteria['namaKriteria']?></th>
+              <?php
+                endwhile;
+              ?>
             </tr>
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+                $idPeserta = $arrDataPeserta['idPeserta'];
                 $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $arrDataUtility = getUtility($koneksi, $idPeserta, $arrDataPenilaian['kriteriaKomputer'], $arrDataPenilaian['kriteriaPendidikan'], $arrDataPenilaian['kriteriaPengalaman'], $arrDataPenilaian['kriteraKendaraan']);
+                $dataUtility = getUtility($koneksi, $idPeserta);
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
-              <td class="text-center"><?=$arrDataUtility[1]['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityKomputer']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityPendidikan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityPengalaman']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['utilityKendaraan']?></td>
+              <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
+              <?php
+                foreach($dataUtility as $value):
+              ?>
+                <td class="text-center"><?=$value?></td>
+              <?php
+                endforeach;
+              ?>
             </tr>
             <?php
               endwhile;
@@ -202,32 +221,40 @@ if(isset($_POST['pesertaTerbaik'])) {
             <tr>
               <th class="text-center">No</th>
               <th class="text-center">Nama</th>
-              <th class="text-center">C1</th>
-              <th class="text-center">C2</th>
-							<th class="text-center">C3</th>
-              <th class="text-center">C4</th>
+              <?php
+                $dataTabelKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+                while($arrDataTabelKriteria = mysqli_fetch_array($dataTabelKriteria)) :
+              ?>
+              <th class="text-center"><?=$arrDataTabelKriteria['namaKriteria']?></th>
+              <?php
+                endwhile;
+              ?>
               <th class="text-center">Nilai Akhir</th>
             </tr>
+
             <?php
               $no = 0;
-              $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian");
-              while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)) :
+              $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+              while($arrDataPeserta = mysqli_fetch_array($dataPeserta)) :
+                $idPeserta = $arrDataPeserta['idPeserta'];
                 $no++;
-                $idPeserta = $arrDataPenilaian['idPeserta'];
-                $arrDataUtility = getNilaiAkhir($koneksi, $idPeserta, $arrDataPenilaian['kriteriaKomputer'], $arrDataPenilaian['kriteriaPendidikan'], $arrDataPenilaian['kriteriaPengalaman'], $arrDataPenilaian['kriteraKendaraan']);
+                $dataNilaiAkhir = getNilaiAkhir($koneksi, $idPeserta);
+                $nilaiAkhir = $_SESSION['nilaiAkhir'];
             ?>
             <tr>
               <td class="text-center"><?php echo $no; ?></td>
-              <td class="text-center"><?=$arrDataUtility[1]['namaDepan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirKomputer']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirPendidikan']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirPengalaman']?></td>
-              <td class="text-center"><?=$arrDataUtility[0]['nilaiAkhirKendaraan']?></td>
-              <td class="text-center"><?=$arrDataUtility[2]?></td>
+              <td class="text-center"><?=$arrDataPeserta['namaDepan']?></td>
+              <?php
+                foreach($dataNilaiAkhir as $value):
+              ?>
+                <td class="text-center"><?=$value?></td>
+              <?php
+                endforeach;
+              ?>
+              <td class="text-center"><?=$nilaiAkhir?></td>
             </tr>
             <?php
               endwhile;
-
             ?>
           </table>
         </div>
