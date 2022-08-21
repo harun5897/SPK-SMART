@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 31, 2022 at 06:07 AM
+-- Generation Time: Aug 21, 2022 at 08:20 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.33
 
@@ -38,10 +38,10 @@ CREATE TABLE `tabelkriteria` (
 --
 
 INSERT INTO `tabelkriteria` (`idKriteria`, `namaKriteria`, `bobotKriteria`) VALUES
-(1, 'komputer', 35),
-(2, 'pendidikan', 30),
-(3, 'pengalaman', 20),
-(4, 'kendaraan', 15);
+(10, 'Komputer', 35),
+(11, 'Pendidikan', 30),
+(12, 'Pengalaman\r\n', 20),
+(13, 'Kendaraan', 15);
 
 -- --------------------------------------------------------
 
@@ -52,21 +52,27 @@ INSERT INTO `tabelkriteria` (`idKriteria`, `namaKriteria`, `bobotKriteria`) VALU
 CREATE TABLE `tabelpenilaian` (
   `idPenilaian` int(9) NOT NULL,
   `idPeserta` int(9) NOT NULL,
-  `kriteriaKomputer` int(9) NOT NULL,
-  `kriteriaPendidikan` int(9) NOT NULL,
-  `kriteriaPengalaman` int(9) NOT NULL,
-  `kriteraKendaraan` int(9) NOT NULL
+  `idKriteria` int(9) NOT NULL,
+  `nilaiKriteria` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tabelpenilaian`
 --
 
-INSERT INTO `tabelpenilaian` (`idPenilaian`, `idPeserta`, `kriteriaKomputer`, `kriteriaPendidikan`, `kriteriaPengalaman`, `kriteraKendaraan`) VALUES
-(21, 4, 100, 80, 80, 80),
-(22, 6, 100, 80, 80, 100),
-(23, 7, 100, 60, 100, 100),
-(24, 8, 100, 60, 100, 100);
+INSERT INTO `tabelpenilaian` (`idPenilaian`, `idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES
+(39, 4, 10, '100'),
+(40, 4, 11, '100'),
+(41, 4, 12, '100'),
+(42, 4, 13, '100'),
+(43, 6, 10, '80'),
+(44, 6, 11, '90'),
+(45, 6, 12, '90'),
+(46, 6, 13, '90'),
+(51, 7, 10, '80'),
+(52, 7, 11, '100'),
+(53, 7, 12, '80'),
+(54, 7, 13, '100');
 
 -- --------------------------------------------------------
 
@@ -94,8 +100,7 @@ CREATE TABLE `tabelpeserta` (
 INSERT INTO `tabelpeserta` (`idPeserta`, `namaDepan`, `namaBelakang`, `nik`, `tanggalLahir`, `jenisKelamin`, `agama`, `alamat`, `email`, `kontak`) VALUES
 (4, 'Andika', 'Pratama', '123456789', '1993-08-08', 'laki-laki', 'islam', 'Yogyakarta ', 'joko@gmail.com', '+62 081360271959'),
 (6, 'Angelia', 'Purnama', '123456789', '1997-08-05', 'perempuan', 'Islam', ' Tanjung Pinang', 'rudi@gmail.com', '081660271959'),
-(7, 'Bambang', 'Cahyo', '123456789', '1996-08-08', 'laki-laki', 'islam', 'tanjung pinang ', 'ari@gmail.com', '0987654321'),
-(8, 'Clara', 'Prisilia', '098765432', '1997-08-05', 'perempuan', 'Islam', 'Tanjung Pinang ', 'clara@gmail.com', '081246781959');
+(7, 'Bambang', 'Cahyo', '123456789', '1996-08-08', 'laki-laki', 'islam', 'tanjung pinang ', 'ari@gmail.com', '0987654321');
 
 -- --------------------------------------------------------
 
@@ -155,13 +160,13 @@ ALTER TABLE `tabeluser`
 -- AUTO_INCREMENT for table `tabelkriteria`
 --
 ALTER TABLE `tabelkriteria`
-  MODIFY `idKriteria` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idKriteria` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tabelpenilaian`
 --
 ALTER TABLE `tabelpenilaian`
-  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `tabelpeserta`
