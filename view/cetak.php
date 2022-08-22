@@ -52,25 +52,23 @@ class myPDF extends FPDF {
   {
     // FUNC DATE
     date_default_timezone_set('Asia/Jakarta');
-    $date = date('Y-m-d');
-    $d = 'Tiban, '.$date;
+    $date = date('d-m-Y');
+    $d = 'Tanjung Pinang, '.$date;
     
-    // Position at ... cm from bottom
     $this->SetY(-40);
     // $this->ln();
     $this->SetFont('Arial','', 14);
-    $this->cell(244,-18, 'Mengetahui,', 0, 0, 'R');
+    $this->cell(247,-18, 'Mengetahui,', 0, 0, 'R');
     $this->ln();
     $this->SetFont('Arial','', 14);
-    $this->cell(0,0, '', 0, 0, 'L');
+    $this->cell(264,0, $d, 0, 0, 'R');
     $this->ln();
     $this->SetFont('Arial','', 14);
-    $this->cell(250,30, 'NOTARIS & PPAT', 0, 0, 'R');
-    
+    $this->cell(253,30, 'NOTARIS & PPAT', 0, 0, 'R');
 
     $this->ln();
     $this->SetFont('Arial','U', 14);
-    $this->cell(255,10, 'RONIFISKA S.H, M.KN', 0, 0, 'R');
+    $this->cell(258,10, 'RONIFISKA S.H, M.KN', 0, 0, 'R');
     $this->ln();
   }
 }
