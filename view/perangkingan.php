@@ -5,6 +5,14 @@ include_once('../handlingData/koneksi.php');
 if($_SESSION['loginStatus'] != 1) {
   header('location: index.php?alertBelumLogin=true');
 }
+if(isset($_GET['alertDataKosong'])) {
+  ?>
+    <script>var alertDataKosong = true;</script>
+  <?php
+}
+if(isset($_GET['hitung'])){
+  validasiHitung($koneksi);
+}
 ?>
 
 <!DOCTYPE html>
@@ -118,7 +126,7 @@ if($_SESSION['loginStatus'] != 1) {
           <div class="d-flex justify-content-between">
             <div class="button">
               <a 
-                href="langkahPerangkingan.php" 
+                href="perangkingan.php?hitung=true" 
                 class="btn btn-md btn-success" 
               > Hitung </a>
             </div>
@@ -175,6 +183,15 @@ if($_SESSION['loginStatus'] != 1) {
   <script type="" src="../@popperjs/core/dist/umd/popper.min.js"></script>
   <script type="" src="../bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+    if(alertDataKosong) {
+      swal({
+        title: "Sorry",
+        text: "Data Tidak Boleh Kosong",
+        buttons: 'OK',
+      });
+    }
+  </script>
 	
 </body>
 </html>

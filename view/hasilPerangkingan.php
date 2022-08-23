@@ -6,7 +6,6 @@ include_once('../handlingData/koneksi.php');
 if($_SESSION['loginStatus'] != 1) {
   header('location: index.php?alertBelumLogin=true');
 }
-
 ?>
 
 <!DOCTYPE html>

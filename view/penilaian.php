@@ -37,6 +37,11 @@ if(isset($_GET['alertDataKriteraKosong'])) {
     <script>var alertDataKriteraKosong = true;</script>
   <?php
 }
+if(isset($_GET['alertTotalKriteriaMax'])) {
+  ?>
+    <script>var alertTotalKriteriaMax = true;</script>
+  <?php
+}
 
 if(isset($_POST['simpanPenilaian'])) {
   simpanPenilaian($koneksi, $_POST['idPeserta'], $_POST['idKriteria'], $_POST['nilaiKriteria']);
@@ -424,7 +429,15 @@ if(isset($_POST['gantiKataSandi'])){
       });
     }
   </script>
-  
+  <script>
+    if(alertTotalKriteriaMax) {
+      swal({
+        title: "Maaf",
+        text: "Nilai Kriteria Melebihi Batas",
+        buttons: 'OK',
+      });
+    }
+  </script>
   <script>
   if (updateDataPenilaian) {
     const myModal = new bootstrap.Modal(document.getElementById("exampleModal1"), {});

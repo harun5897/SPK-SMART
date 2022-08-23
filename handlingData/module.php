@@ -95,30 +95,34 @@ function simpanKriteria($koneksi, $namaKriteria, $bobotKriteria) {
 function updateKriteria($koneksi, $namaKriteria, $bobotKriteria, $idKriteria) {
   $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
   $arrBobotKriteria = [];
-
-  if(!$bobotKriteria || !$namaKriteria) {
-    header('location: dataKriteria.php?alertDataKosong=true');
-  }
-  else {
-    while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
-      if($idKriteria != $arrDataKriteria['idKriteria']) {
-        array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
+  if($bobotKriteria > 100) { 
+    header('location: dataKriteria.php?alertTotalKriteriaMax=true');
+  } else {
+    if(!$bobotKriteria || !$namaKriteria) {
+      header('location: dataKriteria.php?alertDataKosong=true');
+    }
+    else {
+      while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
+        if($idKriteria != $arrDataKriteria['idKriteria']) {
+          array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
+        } else {
+          array_push($arrBobotKriteria, $bobotKriteria);
+        }
+      endwhile;
+      $totalBobot = array_sum($arrBobotKriteria);
+      if($totalBobot > 100) {
+        header('location: dataKriteria.php?alertTotalKriteriaMax=true');
       } else {
-        array_push($arrBobotKriteria, $bobotKriteria);
+        mysqli_query($koneksi, "UPDATE `tabelkriteria` SET `bobotKriteria` = $bobotKriteria WHERE `idKriteria` = $idKriteria ");
+        header('location: dataKriteria.php?alertBerhasilSimpan=true');
       }
-    endwhile;
-    $totalBobot = array_sum($arrBobotKriteria);
-    if($totalBobot > 100) {
-      header('location: dataKriteria.php?alertTotalKriteriaMax=true');
-    } else {
-      mysqli_query($koneksi, "UPDATE `tabelkriteria` SET `bobotKriteria` = $bobotKriteria WHERE `idKriteria` = $idKriteria ");
-      header('location: dataKriteria.php?alertBerhasilSimpan=true');
     }
   }
 }
 
 function hapusKriteria ($koneksi, $idKriteria) {
   mysqli_query($koneksi, "DELETE FROM `tabelkriteria` WHERE `idKriteria` = '$idKriteria'");
+  mysqli_query($koneksi, "DELETE FROM `tabelpenilaian` WHERE `idKriteria` = '$idKriteria'");
   header('location: dataKriteria.php?alertBerhasilHapus=true');
 }
 
@@ -152,57 +156,65 @@ function hapusPeserta($koneksi, $idPeserta) {
 }
 
 function simpanPenilaian($koneksi, $idPeserta, $idKriteria, $nilaiKriteria) {
-  if($idPeserta == '' || $idKriteria == '' || !$nilaiKriteria) {
-    header('location: penilaian.php?alertDataKosong=true');
-  }
-  else {
-    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-    $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
-    if(!$arrDataPenilaian) {
-      mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES ('$idPeserta', '$idKriteria', '$nilaiKriteria')");
-      header('location: penilaian.php?alertBerhasilSimpan=true');
+  if($nilaiKriteria > 100) {
+    header('location: penilaian.php?alertTotalKriteriaMax=true');
+  } else {
+    if($idPeserta == '' || $idKriteria == '' || !$nilaiKriteria) {
+      header('location: penilaian.php?alertDataKosong=true');
     }
     else {
-      $cek = true;
       $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-      while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
-        if($arrDataPenilaian['idKriteria'] == $idKriteria) {
-          header('location: penilaian.php?alertDataSudahAda=true');
-          $cek = false;
-          break;
-        }
-      endwhile;
-
-      if($cek == true) {
+      $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
+      if(!$arrDataPenilaian) {
         mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES ('$idPeserta', '$idKriteria', '$nilaiKriteria')");
         header('location: penilaian.php?alertBerhasilSimpan=true');
+      }
+      else {
+        $cek = true;
+        $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+        while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
+          if($arrDataPenilaian['idKriteria'] == $idKriteria) {
+            header('location: penilaian.php?alertDataSudahAda=true');
+            $cek = false;
+            break;
+          }
+        endwhile;
+  
+        if($cek == true) {
+          mysqli_query($koneksi, "INSERT INTO `tabelpenilaian` (`idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES ('$idPeserta', '$idKriteria', '$nilaiKriteria')");
+          header('location: penilaian.php?alertBerhasilSimpan=true');
+        }
       }
     }
   }
 }
 
 function updatePenilaian($koneksi, $idPeserta, $idKriteria, $nilaiKriteria) {
-  if($idKriteria == '' || !$nilaiKriteria) {
-    header('location: penilaian.php?alertDataKosong=true');
+  if($nilaiKriteria > 100) {
+    header('location: penilaian.php?alertTotalKriteriaMax=true');
   } else {
-    $cek = true;
-    $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
-    while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
-      if($arrDataPenilaian['idKriteria'] == $idKriteria) {
-        $dataPenilaianFilter = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria' ");
-        $arrDataPenilaianFilter =  mysqli_fetch_array($dataPenilaianFilter);
-        $idPenilaian = $arrDataPenilaianFilter['idPenilaian'];
-        mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `nilaiKriteria` = '$nilaiKriteria'
-        WHERE `idPenilaian` = '$idPenilaian'
-        ");
-        header('location: penilaian.php?alertBerhasilUpdate=true');
-        $cek = false;
-        break;
+    if($idKriteria == '' || !$nilaiKriteria) {
+      header('location: penilaian.php?alertDataKosong=true');
+    } else {
+      $cek = true;
+      $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM tabelpenilaian WHERE idPeserta = '$idPeserta'");
+      while($arrDataPenilaian = mysqli_fetch_array($dataPenilaian)):
+        if($arrDataPenilaian['idKriteria'] == $idKriteria) {
+          $dataPenilaianFilter = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria' ");
+          $arrDataPenilaianFilter =  mysqli_fetch_array($dataPenilaianFilter);
+          $idPenilaian = $arrDataPenilaianFilter['idPenilaian'];
+          mysqli_query($koneksi, "UPDATE `tabelpenilaian` SET `nilaiKriteria` = '$nilaiKriteria'
+          WHERE `idPenilaian` = '$idPenilaian'
+          ");
+          header('location: penilaian.php?alertBerhasilUpdate=true');
+          $cek = false;
+          break;
+        }
+      endwhile;
+  
+      if($cek == true) {
+        header('location: penilaian.php?alertDataKriteraKosong=true');
       }
-    endwhile;
-
-    if($cek == true) {
-      header('location: penilaian.php?alertDataKriteraKosong=true');
     }
   }
 }
@@ -210,5 +222,33 @@ function updatePenilaian($koneksi, $idPeserta, $idKriteria, $nilaiKriteria) {
 function hapusPenilaian($koneksi, $idPeserta) {
   mysqli_query($koneksi, "DELETE FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta'");
   header('location: penilaian.php?alertBerhasilHapus=true');
+}
+
+function validasiHitung($koneksi) {
+  $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
+  $lengthPeserta = 0;
+  $cekLengthPeserta = 0;
+  while($arrDataPeserta = mysqli_fetch_array($dataPeserta)):
+    $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+    while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
+      $idPeserta = $arrDataPeserta['idPeserta'];
+      $idKriteria = $arrDataKriteria['idKriteria'];
+      $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria'");
+      $arrDataPenilaian = mysqli_fetch_array($dataPenilaian);
+      if(!$arrDataPenilaian['nilaiKriteria']) {
+        $lengthPeserta = 0;
+        break;
+      }
+    endwhile;
+    $lengthPeserta++;
+    $cekLengthPeserta++;
+  endwhile;
+
+  if($lengthPeserta != $cekLengthPeserta) {
+    header('location: perangkingan.php?alertDataKosong=true');
+  }
+  else {
+    header('location: LangkahPerangkingan.php');
+  }
 }
 ?>
