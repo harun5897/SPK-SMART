@@ -228,7 +228,13 @@ if(isset($_POST['gantiKataSandi'])){
                   $dataPenilaian = mysqli_query($koneksi, "SELECT * FROM `tabelpenilaian` WHERE `idPeserta` = '$idPeserta' AND `idKriteria` = '$idKriteria'");
                   $arrDataPenilaian = mysqli_fetch_array($dataPenilaian)
               ?>
-                <td class="text-center"><?=$arrDataPenilaian['nilaiKriteria']?></td>
+                <td class="text-center">
+                  <?php
+                    if(isset($arrDataPenilaian['nilaiKriteria'])){
+                      echo $arrDataPenilaian['nilaiKriteria'];
+                    }
+                  ?>
+                </td>
               <?php
                 endwhile;
               ?>

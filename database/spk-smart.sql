@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2022 at 08:20 PM
+-- Generation Time: Aug 23, 2022 at 03:33 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.33
 
@@ -38,10 +38,10 @@ CREATE TABLE `tabelkriteria` (
 --
 
 INSERT INTO `tabelkriteria` (`idKriteria`, `namaKriteria`, `bobotKriteria`) VALUES
-(10, 'Komputer', 35),
-(11, 'Pendidikan', 30),
-(12, 'Pengalaman\r\n', 20),
-(13, 'Kendaraan', 15);
+(20, 'komputer', 35),
+(21, 'pendidikan', 30),
+(22, 'pengalaman', 20),
+(23, 'kendaraan', 15);
 
 -- --------------------------------------------------------
 
@@ -61,18 +61,7 @@ CREATE TABLE `tabelpenilaian` (
 --
 
 INSERT INTO `tabelpenilaian` (`idPenilaian`, `idPeserta`, `idKriteria`, `nilaiKriteria`) VALUES
-(39, 4, 10, '100'),
-(40, 4, 11, '100'),
-(41, 4, 12, '100'),
-(42, 4, 13, '100'),
-(43, 6, 10, '80'),
-(44, 6, 11, '90'),
-(45, 6, 12, '90'),
-(46, 6, 13, '90'),
-(51, 7, 10, '80'),
-(52, 7, 11, '100'),
-(53, 7, 12, '80'),
-(54, 7, 13, '100');
+(79, 4, 20, '100');
 
 -- --------------------------------------------------------
 
@@ -160,13 +149,13 @@ ALTER TABLE `tabeluser`
 -- AUTO_INCREMENT for table `tabelkriteria`
 --
 ALTER TABLE `tabelkriteria`
-  MODIFY `idKriteria` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idKriteria` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `tabelpenilaian`
 --
 ALTER TABLE `tabelpenilaian`
-  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `idPenilaian` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `tabelpeserta`
