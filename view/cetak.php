@@ -25,9 +25,11 @@ class myPDF extends FPDF {
 
     $this->SetFont('Arial', 'B', 14);
     $this->Cell(15, 10, 'No', 1,0, 'C');
-    $this->Cell(90, 10, 'Nama', 1,0,'C');
-    $this->Cell(90, 10, 'Kontak', 1,0, 'C');
-    $this->Cell(80, 10, 'Nilai', 1,0, 'C');
+    $this->Cell(50, 10, 'Nama', 1,0,'C');
+    $this->Cell(40, 10, 'Jenis Kelamin', 1,0,'C');
+    $this->Cell(70, 10, 'Alamat', 1,0, 'C');
+    $this->Cell(70, 10, 'Kontak', 1,0, 'C');
+    $this->Cell(30, 10, 'Nilai', 1,0, 'C');
 
     $rankingIdPeserta = $_SESSION['RankingIdPeserta'];
     $rankingNilaiAkhir = $_SESSION['RankingNilaiAKhir'];
@@ -40,9 +42,11 @@ class myPDF extends FPDF {
       $this->ln();
       $this->SetFont('Arial', '', 14);
       $this->Cell(15, 10, $no, 1,0, 'C');
-      $this->Cell(90, 10, $arrDataPeserta['namaDepan'], 1,0,'C');
-      $this->Cell(90, 10, $arrDataPeserta['kontak'], 1,0, 'C');
-      $this->Cell(80, 10, $rankingNilaiAkhir[$i] , 1,0, 'C');
+      $this->Cell(50, 10, $arrDataPeserta['namaDepan'], 1,0,'C');
+      $this->Cell(40, 10, $arrDataPeserta['jenisKelamin'], 1,0,'C');
+      $this->Cell(70, 10, $arrDataPeserta['alamat'], 1,0,'C');
+      $this->Cell(70, 10, $arrDataPeserta['kontak'], 1,0, 'C');
+      $this->Cell(30, 10, $rankingNilaiAkhir[$i] , 1,0, 'C');
       $no++;
       $i++;
     endforeach;
