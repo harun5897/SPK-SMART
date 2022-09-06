@@ -17,6 +17,11 @@ if(isset($_GET['alertDataSama'])) {
     <script>var alertDataSama = true;</script>
   <?php
 }
+if(isset($_GET['alertDataNikSama'])) {
+  ?>
+    <script>var alertDataNikSama = true;</script>
+  <?php
+}
 if(isset($_POST['simpanPeserta'])) {
   simpanPeserta($koneksi, $_POST['namaDepan'],$_POST['namaBelakang'],$_POST['nik'],$_POST['tanggalLahir'],$_POST['jenisKelamin'],$_POST['agama'],$_POST['alamat'],$_POST['email'],$_POST['kontak']);
 }
@@ -205,12 +210,20 @@ if(isset($_POST['gantiKataSandi'])){
       });
     }
   </script>
-  
   <script>
     if(alertDataSama) {
       swal({
         title: "Sorry",
         text: "Data kontak telah tersedia, silahkan ganti",
+        buttons: 'OK',
+      });
+    }
+  </script>
+  <script>
+    if(alertDataNikSama) {
+      swal({
+        title: "Sorry",
+        text: "Data nik telah tersedia, silahkan ganti",
         buttons: 'OK',
       });
     }

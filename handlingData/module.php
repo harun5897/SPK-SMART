@@ -127,19 +127,22 @@ function hapusKriteria ($koneksi, $idKriteria) {
 }
 
 function simpanPeserta($koneksi, $namaDepan, $namaBelakang, $nik, $tanggalLahir, $jenisKelamin, $agama,    $alamat, $email, $kontak) {
-  $dataPeserta = mysqli_query($koneksi, " SELECT * FROM `tabelpeserta` WHERE `kontak` = '$kontak'");
+  $dataPeserta = mysqli_query($koneksi, " SELECT * FROM `tabelpeserta` WHERE `kontak` = '$kontak' OR `nik` = '$nik'");
   $arrDataPeserta = mysqli_fetch_array($dataPeserta);
-
-  if($arrDataPeserta['kontak'] == $kontak) {
-    header('location: tambahDataPeserta.php?alertDataSama=true');
-  }
-  else {
-    if(!$namaDepan || !$namaBelakang || !$nik || !$tanggalLahir || !$jenisKelamin || !$agama || !$alamat || !$email || !$kontak) {
-      header('location: tambahDataPeserta.php?alertDataKosong=true');
+  if($arrDataPeserta['nik'] == $nik) {
+    header('location: tambahDataPeserta.php?alertDataNikSama=true');
+  } else {
+    if($arrDataPeserta['kontak'] == $kontak) {
+      header('location: tambahDataPeserta.php?alertDataSama=true');
     }
     else {
-      mysqli_query($koneksi, "INSERT INTO `tabelpeserta` (`namaDepan`, `namaBelakang`, `nik`, `tanggalLahir`, `jenisKelamin`, `agama`, `alamat`, `email`, `kontak`) VALUES ('$namaDepan', '$namaBelakang', '$nik', '$tanggalLahir', '$jenisKelamin', '$agama', '$alamat', '$email', '$kontak')");
-      header('location: DataPeserta.php?alertBerhasilSimpan=true');
+      if(!$namaDepan || !$namaBelakang || !$nik || !$tanggalLahir || !$jenisKelamin || !$agama || !$alamat || !$email || !$kontak) {
+        header('location: tambahDataPeserta.php?alertDataKosong=true');
+      }
+      else {
+        mysqli_query($koneksi, "INSERT INTO `tabelpeserta` (`namaDepan`, `namaBelakang`, `nik`, `tanggalLahir`, `jenisKelamin`, `agama`, `alamat`, `email`, `kontak`) VALUES ('$namaDepan', '$namaBelakang', '$nik', '$tanggalLahir', '$jenisKelamin', '$agama', '$alamat', '$email', '$kontak')");
+        header('location: DataPeserta.php?alertBerhasilSimpan=true');
+      }
     }
   }
 }
