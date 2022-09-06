@@ -210,7 +210,7 @@ if(isset($_POST['gantiKataSandi'])){
     if(alertDataSama) {
       swal({
         title: "Sorry",
-        text: "Data Kontak Tidak Boleh Sama",
+        text: "Data kontak telah tersedia, silahkan ganti",
         buttons: 'OK',
       });
     }
