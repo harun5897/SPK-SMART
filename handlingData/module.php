@@ -233,6 +233,7 @@ function hapusPenilaian($koneksi, $idPeserta) {
 }
 
 function validasiHitung($koneksi) {
+
   $dataPeserta = mysqli_query($koneksi, "SELECT * FROM tabelpeserta");
   $lengthPeserta = 0;
   $cekLengthPeserta = 0;
@@ -252,11 +253,21 @@ function validasiHitung($koneksi) {
     $cekLengthPeserta++;
   endwhile;
 
-  if($lengthPeserta != $cekLengthPeserta) {
-    header('location: perangkingan.php?alertDataKosong=true');
-  }
-  else {
-    header('location: LangkahPerangkingan.php');
+  $dataKriteria = mysqli_query($koneksi, "SELECT * FROM tabelkriteria");
+  $arrBobotKriteria = [];
+  while($arrDataKriteria = mysqli_fetch_array($dataKriteria)):
+    array_push($arrBobotKriteria, $arrDataKriteria['bobotKriteria']);  
+  endwhile;
+  $totalBobot = array_sum($arrBobotKriteria);
+  if($totalBobot < 100) {
+    header('location: perangkingan.php?alertTotalKriteriaMin=true');
+  } else {
+    if($lengthPeserta != $cekLengthPeserta) {
+      header('location: perangkingan.php?alertDataKosong=true');
+    }
+    else {
+      header('location: LangkahPerangkingan.php');
+    }
   }
 }
 ?>

@@ -10,6 +10,11 @@ if(isset($_GET['alertDataKosong'])) {
     <script>var alertDataKosong = true;</script>
   <?php
 }
+if(isset($_GET['alertTotalKriteriaMin'])) {
+  ?>
+    <script>var alertTotalKriteriaMin = true;</script>
+  <?php
+}
 if(isset($_GET['hitung'])){
   validasiHitung($koneksi);
 }
@@ -23,6 +28,11 @@ if(isset($_GET['hitung'])){
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
   <link rel="stylesheet" href="../assets/scss/style.css">
+  <style>
+  .swal-modal .swal-text {
+    text-align: center;
+  }
+  </style>
 </head>
 <body>
   <!-- Navbar -->
@@ -127,7 +137,7 @@ if(isset($_GET['hitung'])){
             <div class="button">
               <a 
                 href="perangkingan.php?hitung=true" 
-                class="btn btn-md btn-success" 
+                class="btn btn-md btn-success"
               > Hitung </a>
             </div>
             <div class="form">
@@ -198,6 +208,14 @@ if(isset($_GET['hitung'])){
       });
     }
   </script>
-	
+  <script>
+    if(alertTotalKriteriaMin) {
+      swal({
+        title: "Sorry",
+        text: "Data Nilai Kriteria Belum 100, \n Silahkan Tambah Terlebih Dahulu",
+        buttons: 'OK',
+      });
+    }
+  </script>
 </body>
 </html>
